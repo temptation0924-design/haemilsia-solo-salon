@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { label: "Gallery", href: "#gallery" },
   { label: "About", href: "#about" },
   { label: "Community", href: "#community" },
+  { label: "FAQ", href: "#faq" },
   { label: "Contact", href: "#contact" },
 ];
 

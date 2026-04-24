@@ -127,6 +127,62 @@ function TarotParticles() {
   );
 }
 
+/* ─── FAQ Accordion Item ─── */
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="overflow-hidden transition-all duration-300"
+      style={{
+        backgroundColor: open ? "rgba(63, 42, 82, 0.5)" : "rgba(63, 42, 82, 0.25)",
+        border: `1px solid ${open ? "rgba(201, 169, 110, 0.35)" : "rgba(201, 169, 110, 0.12)"}`,
+      }}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-6 py-5 text-left group"
+      >
+        <span
+          className="font-serif-kr text-sm md:text-base font-light pr-4 transition-colors duration-300"
+          style={{ color: open ? "#E6EFF7" : "#BEAEDB" }}
+        >
+          {question}
+        </span>
+        <motion.span
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex-shrink-0 w-6 h-6 flex items-center justify-center"
+          style={{ color: "#C9A96E" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <line x1="7" y1="0" x2="7" y2="14" stroke="currentColor" strokeWidth="1.5" />
+            <line x1="0" y1="7" x2="14" y2="7" stroke="currentColor" strokeWidth="1.5" />
+          </svg>
+        </motion.span>
+      </button>
+      <motion.div
+        initial={false}
+        animate={{
+          height: open ? "auto" : 0,
+          opacity: open ? 1 : 0,
+        }}
+        transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="overflow-hidden"
+      >
+        <div className="px-6 pb-5">
+          <div className="w-full h-px mb-4" style={{ backgroundColor: "rgba(201, 169, 110, 0.15)" }} />
+          <p
+            className="font-sans-kr text-sm font-light leading-relaxed"
+            style={{ color: "#BEAEDB" }}
+          >
+            {answer}
+          </p>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 /* ─── Main Page ─── */
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -176,6 +232,7 @@ export default function Home() {
               { label: "Gallery", href: "#gallery" },
               { label: "About", href: "#about" },
               { label: "Community", href: "#community" },
+              { label: "FAQ", href: "#faq" },
               { label: "Contact", href: "#contact" },
             ].map((item) => (
               <a
@@ -1024,6 +1081,61 @@ export default function Home() {
                 </a>
               </div>
             </FadeInSection>
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          FAQ — 자주 묻는 질문
+      ═══════════════════════════════════════════ */}
+      <section id="faq" className="relative py-24 md:py-32" style={{ backgroundColor: "#3A2D34" }}>
+        <TarotParticles />
+        <div className="container relative z-10">
+          <FadeInSection>
+            <SectionTitle
+              sub="Questions"
+              main="자주 묻는 질문"
+              desc="궁금한 점이 있으시다면 먼저 확인해 보세요."
+            />
+          </FadeInSection>
+
+          <div className="max-w-3xl mx-auto space-y-4">
+            {[
+              {
+                q: "술을 못 마셔도 방문할 수 있나요?",
+                a: "물론입니다. 논알콜 시그니처 음료를 준비하고 있으며, 음료 선택은 세션 시작 시 상담사와 함께 정하실 수 있습니다. 대화와 타로 리딩이 중심이므로 음주 여부는 전혀 상관없습니다.",
+              },
+              {
+                q: "타로를 처음 접하는데 괜찮을까요?",
+                a: "전혀 문제없습니다. 타로 경험이 없으셔도 상담사가 카드의 의미를 쉽게 설명해 드립니다. 타로는 점술이 아닌, 자신의 마음을 들여다보는 대화의 도구로 활용됩니다.",
+              },
+              {
+                q: "예약은 어떻게 하나요?",
+                a: "100% 사전 예약제로 운영됩니다. 홈페이지의 '예약 대기 신청' 버튼을 통해 대기자 폼을 작성해 주시면, 확인 후 개별 연락드려 일정을 조율합니다.",
+              },
+              {
+                q: "세션 취소나 변경은 가능한가요?",
+                a: "세션 24시간 전까지 무료 취소 및 변경이 가능합니다. 24시간 이내 취소 시에는 세션 비용의 50%가 취소 수수료로 발생합니다.",
+              },
+              {
+                q: "연결의 밤은 어떤 분위기인가요?",
+                a: "4~6명의 소규모 그룹이 모여 그룹 타로 리딩과 자유로운 대화를 나누는 시간입니다. 서로의 이야기를 존중하는 따뜻한 분위기에서 진행되며, 편안하게 새로운 인연을 만들 수 있습니다.",
+              },
+              {
+                q: "혼자 가도 어색하지 않을까요?",
+                a: "Solo Salon은 '혼자 오는 것'이 기본인 공간입니다. 모든 손님이 혼자 방문하시기 때문에 어색함 없이 오롯이 자신만의 시간을 보내실 수 있습니다.",
+              },
+              {
+                q: "타로 상담사로 지원하고 싶어요. 경험이 없어도 되나요?",
+                a: "네, 타로 경험이 없어도 지원 가능합니다. 채용 후 체계적인 타로 교육을 제공해 드리며, 사람과의 대화를 좋아하고 따뜻한 마음을 가진 분이라면 환영합니다.",
+              },
+            ].map((item, i) => (
+              <FadeInSection key={i} delay={0.1 + i * 0.05}>
+                <FAQItem question={item.q} answer={item.a} />
+              </FadeInSection>
+            ))}
           </div>
         </div>
       </section>
