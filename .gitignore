@@ -110,3 +110,14 @@ temp/
 
 # Manus version file (auto-generated, not part of source)
 client/public/__manus__/version.json
+
+# Manus logs
+.manus-logs/
+
+# SSH keys (절대 커밋 금지)
+.ssh/
+
+# Python
+__pycache__/
+*.pyc
+*.tmp
