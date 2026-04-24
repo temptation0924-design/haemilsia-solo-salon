@@ -4,8 +4,8 @@
  * Colors: Jacarta #3F2A52, Dark Blue-Gray #75619D, Wisteria #BEAEDB,
  *         Bright Gray #E6EFF7, Black Coffee #3A2D34, Gold #C9A96E
  *
- * Section Order (V5):
- * Hero → Tarot → Experience → Food → Rules → Gallery → About(여성) → Host(남성배너) → Recruit → Community → Pricing → FAQ → Contact → Footer
+ * Section Order (V8 — 설득 흐름):
+ * Hero → About(여성) → Tarot → Host(남성배너) → Experience → Rules → Gallery → Pricing → Community → Food → Recruit → FAQ → Contact → Footer
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -234,11 +234,11 @@ export default function Home() {
           </a>
           <div className="hidden md:flex items-center gap-8">
             {[
+              { label: "About", href: "#about" },
               { label: "Tarot", href: "#tarot" },
               { label: "Experience", href: "#experience" },
-              { label: "Food", href: "#food" },
               { label: "Gallery", href: "#gallery" },
-              { label: "About", href: "#about" },
+              { label: "Pricing", href: "#pricing" },
               { label: "Community", href: "#community" },
               { label: "FAQ", href: "#faq" },
               { label: "Contact", href: "#contact" },
@@ -271,7 +271,7 @@ export default function Home() {
       </nav>
 
       {/* ═══════════════════════════════════════════
-          HERO SECTION
+          1. HERO SECTION — 첫인상, 호기심 유발
       ═══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative h-screen overflow-hidden">
         <motion.div
@@ -367,7 +367,74 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          TAROT — 타로 강조 섹션
+          2. ABOUT — 공감/문제 제기 (여성 이미지)
+      ═══════════════════════════════════════════ */}
+      <section id="about" className="relative py-24 md:py-32" style={{ backgroundColor: "#3A2D34" }}>
+        <div className="container">
+          <FadeInSection>
+            <SectionTitle
+              sub="Why Solo Salon"
+              main="혼자라서 더 깊은 대화"
+              desc="때로는 혼자일 때, 가장 솔직한 이야기가 시작됩니다."
+            />
+          </FadeInSection>
+
+          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center max-w-5xl mx-auto">
+            <FadeInSection delay={0.2}>
+              <div className="relative">
+                <div className="absolute -inset-4 opacity-20 blur-2xl" style={{ backgroundColor: "#3F2A52" }} />
+                <img
+                  src={ASSETS.femaleAbout}
+                  alt="타로를 보며 혼술하는 모습"
+                  className="relative w-full aspect-[3/4] object-cover"
+                  style={{ border: "1px solid rgba(201, 169, 110, 0.2)" }}
+                  loading="lazy"
+                />
+              </div>
+            </FadeInSection>
+
+            <FadeInSection delay={0.4}>
+              <div className="space-y-6">
+                <blockquote
+                  className="font-serif-kr text-lg md:text-xl font-light leading-relaxed pl-6"
+                  style={{
+                    color: "#E6EFF7",
+                    borderLeft: "2px solid #C9A96E",
+                  }}
+                >
+                  "오늘 하루, 아무에게도 말 못 한 이야기가 있으신가요?"
+                </blockquote>
+
+                <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9]"
+                   style={{ color: "#BEAEDB" }}>
+                  친구에게도, 가족에게도 쉽게 꺼내지 못하는 마음이 있습니다.
+                  술 한 잔의 용기가 필요한 밤, 낯선 공간에서 낯선 사람과 나누는
+                  대화는 때로 가장 진솔한 위로가 됩니다.
+                </p>
+
+                <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9]"
+                   style={{ color: "#BEAEDB" }}>
+                  Haemilsia Solo Salon은 <strong style={{ color: "#C9A96E", fontWeight: 400 }}>혼자 오는 사람만을 위한 프라이빗 공간</strong>입니다.
+                  타로 리딩과 함께하는 90분의 세션 동안,
+                  바텐더이자 상담사인 호스트가 당신의 이야기에 귀 기울입니다.
+                </p>
+
+                <div className="flex items-center gap-4 pt-4">
+                  <div className="w-12 h-px" style={{ backgroundColor: "#C9A96E" }} />
+                  <span className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>
+                    100% Reservation Only
+                  </span>
+                </div>
+              </div>
+            </FadeInSection>
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          3. TAROT — 해결책 제시 (타로 리딩)
       ═══════════════════════════════════════════ */}
       <section id="tarot" className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#2D2128" }}>
         <TarotParticles />
@@ -448,7 +515,67 @@ export default function Home() {
       <GoldDivider />
 
       {/* ═══════════════════════════════════════════
-          EXPERIENCE — 세션 흐름
+          4. HOST — 호스트 소개로 신뢰 구축 (남성 배너)
+      ═══════════════════════════════════════════ */}
+      <section className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#2D2128" }}>
+        <div className="absolute inset-0">
+          <img
+            src={ASSETS.maleHostBanner}
+            alt="타로 상담사"
+            className="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(to right, rgba(45,33,40,0.85) 0%, rgba(45,33,40,0.5) 50%, rgba(45,33,40,0.85) 100%)",
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(to bottom, rgba(45,33,40,0.3) 0%, rgba(45,33,40,0.7) 100%)",
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 container">
+          <FadeInSection>
+            <div className="max-w-2xl">
+              <p className="font-display text-sm tracking-[0.3em] uppercase mb-4" style={{ color: "#C9A96E" }}>
+                Private Tarot Session
+              </p>
+              <h2 className="font-serif-kr text-2xl md:text-4xl font-light leading-snug mb-6" style={{ color: "#E6EFF7" }}>
+                한 잔의 술, 한 장의 카드,
+                <br />
+                그리고 당신의 이야기
+              </h2>
+              <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9] mb-8" style={{ color: "#BEAEDB" }}>
+                호스트는 바텐더이자 타로 리더입니다.
+                당신의 이야기에 귀 기울이고, 카드가 전하는 메시지를 함께 읽어드립니다.
+                판단 없이, 조언 없이, 오직 경청과 공감으로 채워지는 시간.
+              </p>
+              <a
+                href="https://tally.so"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-8 py-3.5 font-display text-sm tracking-[0.2em] uppercase transition-all duration-300 hover:scale-105"
+                style={{
+                  backgroundColor: "#C9A96E",
+                  color: "#3A2D34",
+                }}
+              >
+                예약 대기 신청
+              </a>
+            </div>
+          </FadeInSection>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          5. EXPERIENCE — 세션 흐름 체험 안내
       ═══════════════════════════════════════════ */}
       <section id="experience" className="relative py-24 md:py-32" style={{ backgroundColor: "#3F2A52" }}>
         <div className="container">
@@ -553,7 +680,359 @@ export default function Home() {
       <GoldDivider />
 
       {/* ═══════════════════════════════════════════
-          FOOD — 음식 나눔 쇼케이스
+          6. RULES — 안심 (세 가지 약속)
+      ═══════════════════════════════════════════ */}
+      <section id="rules" className="relative py-24 md:py-32" style={{ backgroundColor: "#3A2D34" }}>
+        <div className="container">
+          <FadeInSection>
+            <SectionTitle
+              sub="Our Promise"
+              main="세 가지 약속"
+              desc="모두의 안전하고 편안한 시간을 위한 규칙입니다."
+            />
+          </FadeInSection>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[
+              {
+                icon: <Users size={28} />,
+                title: "1인 전용",
+                desc: "오직 혼자 오시는 분만 입장 가능합니다. 동행 없이, 온전히 나만의 시간을 보내세요.",
+              },
+              {
+                icon: <ShieldCheck size={28} />,
+                title: "비밀 보장",
+                desc: "이 공간에서 나눈 모든 이야기는 철저히 비밀이 보장됩니다. 안심하고 마음을 열어주세요.",
+              },
+              {
+                icon: <Clock size={28} />,
+                title: "100% 예약제",
+                desc: "모든 세션은 사전 예약으로만 운영됩니다. 대기자 신청 후 순서대로 안내해 드립니다.",
+              },
+            ].map((rule, i) => (
+              <FadeInSection key={rule.title} delay={0.15 * i}>
+                <div
+                  className="relative p-8 text-center h-full transition-all duration-500 hover:translate-y-[-4px]"
+                  style={{
+                    backgroundColor: "rgba(63, 42, 82, 0.4)",
+                    border: "1px solid rgba(201, 169, 110, 0.15)",
+                  }}
+                >
+                  <div className="inline-flex items-center justify-center w-14 h-14 mb-5"
+                       style={{ color: "#C9A96E", border: "1px solid rgba(201, 169, 110, 0.3)" }}>
+                    {rule.icon}
+                  </div>
+                  <h3 className="font-serif-kr text-lg mb-3" style={{ color: "#E6EFF7" }}>
+                    {rule.title}
+                  </h3>
+                  <p className="font-sans-kr text-sm font-light leading-relaxed" style={{ color: "#BEAEDB" }}>
+                    {rule.desc}
+                  </p>
+                </div>
+              </FadeInSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          7. GALLERY — 공간 분위기로 상상력 자극
+      ═══════════════════════════════════════════ */}
+      <section id="gallery" className="relative py-24 md:py-32" style={{ backgroundColor: "#3F2A52" }}>
+        <div className="container">
+          <FadeInSection>
+            <SectionTitle
+              sub="The Space"
+              main="비밀의 공간"
+            />
+          </FadeInSection>
+
+          {/* Masonry-like gallery */}
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+              {[
+                { src: ASSETS.chairPurple, span: "row-span-2", aspect: "aspect-[3/5]" },
+                { src: ASSETS.galleryWall, span: "", aspect: "aspect-square" },
+                { src: ASSETS.purpleSalon, span: "", aspect: "aspect-square" },
+                { src: ASSETS.sofaPurple, span: "md:col-span-2", aspect: "aspect-[16/9]" },
+                { src: ASSETS.flowersSofa, span: "", aspect: "aspect-[3/4]" },
+                { src: ASSETS.chairPink, span: "", aspect: "aspect-[3/4]" },
+                { src: ASSETS.tarotWheel, span: "", aspect: "aspect-square" },
+              ].map((img, i) => (
+                <FadeInSection key={i} delay={0.1 * i} className={img.span}>
+                  <div
+                    className={`relative overflow-hidden group ${img.aspect}`}
+                    style={{ border: "1px solid rgba(201, 169, 110, 0.1)" }}
+                  >
+                    <img
+                      src={img.src}
+                      alt="Solo Salon 공간"
+                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ backgroundColor: "rgba(63, 42, 82, 0.3)" }}
+                    />
+                  </div>
+                </FadeInSection>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          8. PRICING — 가격 제시 (결정 유도)
+      ═══════════════════════════════════════════ */}
+      <section id="pricing" className="relative py-24 md:py-32" style={{ backgroundColor: "#3A2D34" }}>
+        <div className="container">
+          <FadeInSection>
+            <SectionTitle
+              sub="Pricing"
+              main="세션 안내"
+            />
+          </FadeInSection>
+
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
+            {/* Private Session */}
+            <FadeInSection delay={0.2}>
+              <div
+                className="p-8 md:p-10 text-center relative overflow-hidden h-full"
+                style={{
+                  backgroundColor: "rgba(63, 42, 82, 0.5)",
+                  border: "1px solid rgba(201, 169, 110, 0.25)",
+                }}
+              >
+                <div className="absolute top-3 left-3 w-6 h-6" style={{ borderTop: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
+                <div className="absolute top-3 right-3 w-6 h-6" style={{ borderTop: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
+                <div className="absolute bottom-3 left-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
+                <div className="absolute bottom-3 right-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
+
+                <p className="font-display text-sm tracking-[0.3em] uppercase mb-4" style={{ color: "#C9A96E" }}>
+                  Private Session
+                </p>
+                <h3 className="font-serif-kr text-xl md:text-2xl font-light mb-2" style={{ color: "#E6EFF7" }}>
+                  1:1 프라이빗 세션
+                </h3>
+                <p className="font-sans-kr text-sm mb-6" style={{ color: "#BEAEDB" }}>
+                  90분 / 웰컴 드링크 + 타로 리딩 + 대화 + 마무리 음료
+                </p>
+
+                <div className="mb-6">
+                  <span className="font-display text-4xl md:text-5xl font-light" style={{ color: "#C9A96E" }}>
+                    50,000
+                  </span>
+                  <span className="font-sans-kr text-sm ml-1" style={{ color: "#BEAEDB" }}>원</span>
+                </div>
+
+                <div className="space-y-2 mb-8 text-left max-w-xs mx-auto">
+                  {[
+                    "시그니처 웰컴 드링크 1잔 포함",
+                    "마무리 음료 1잔 포함",
+                    "1:1 타로 리딩",
+                    "기념 타로 카드 1장 증정",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#C9A96E" }} />
+                      <span className="font-sans-kr text-sm font-light" style={{ color: "#BEAEDB" }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <a
+                  href="https://tally.so"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block w-full py-3.5 font-display text-sm tracking-[0.2em] uppercase transition-all duration-300 hover:opacity-90"
+                  style={{
+                    backgroundColor: "#C9A96E",
+                    color: "#3A2D34",
+                  }}
+                >
+                  예약 대기 신청하기
+                </a>
+              </div>
+            </FadeInSection>
+
+            {/* Connection Night Session */}
+            <FadeInSection delay={0.35}>
+              <div
+                className="p-8 md:p-10 text-center relative overflow-hidden h-full"
+                style={{
+                  backgroundColor: "rgba(63, 42, 82, 0.5)",
+                  border: "1px solid rgba(201, 169, 110, 0.25)",
+                }}
+              >
+                <div className="absolute top-3 left-3 w-6 h-6" style={{ borderTop: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
+                <div className="absolute top-3 right-3 w-6 h-6" style={{ borderTop: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
+                <div className="absolute bottom-3 left-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
+                <div className="absolute bottom-3 right-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
+
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <Sparkles size={14} style={{ color: "#C9A96E" }} />
+                  <p className="font-display text-sm tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>
+                    Connection Night
+                  </p>
+                </div>
+                <h3 className="font-serif-kr text-xl md:text-2xl font-light mb-2" style={{ color: "#E6EFF7" }}>
+                  연결의 밤 세션
+                </h3>
+                <p className="font-sans-kr text-sm mb-6" style={{ color: "#BEAEDB" }}>
+                  120분 / 그룹 타로 리딩 + 대화 + 음료 2잔
+                </p>
+
+                <div className="mb-6">
+                  <span className="font-display text-4xl md:text-5xl font-light" style={{ color: "#C9A96E" }}>
+                    30,000
+                  </span>
+                  <span className="font-sans-kr text-sm ml-1" style={{ color: "#BEAEDB" }}>원</span>
+                </div>
+
+                <div className="space-y-2 mb-8 text-left max-w-xs mx-auto">
+                  {[
+                    "4~6명 소규모 그룹",
+                    "음료 2잔 포함",
+                    "그룹 타로 리딩 체험",
+                    "주 1회 운영 (사전 신청)",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#C9A96E" }} />
+                      <span className="font-sans-kr text-sm font-light" style={{ color: "#BEAEDB" }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <a
+                  href="https://tally.so"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block w-full py-3.5 font-display text-sm tracking-[0.2em] uppercase transition-all duration-300 hover:opacity-90"
+                  style={{
+                    border: "1px solid #C9A96E",
+                    color: "#C9A96E",
+                    backgroundColor: "rgba(201, 169, 110, 0.08)",
+                  }}
+                >
+                  참여 신청하기
+                </a>
+              </div>
+            </FadeInSection>
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          9. COMMUNITY — 연결의 밤 (확장 옵션)
+      ═══════════════════════════════════════════ */}
+      <section id="community" className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#3F2A52" }}>
+        <div className="absolute inset-0 opacity-20">
+          <img src={ASSETS.rulesBg} alt="" className="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div className="relative z-10 container">
+          <FadeInSection>
+            <SectionTitle
+              sub="Connection Night"
+              main="연결의 밤"
+              desc="혼자이되, 외롭지 않은 시간"
+            />
+          </FadeInSection>
+
+          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center max-w-5xl mx-auto">
+            <FadeInSection delay={0.2}>
+              <div className="relative">
+                <div
+                  className="absolute -inset-4 opacity-20 blur-3xl"
+                  style={{ backgroundColor: "#C9A96E" }}
+                />
+                <img
+                  src={ASSETS.tarotSocialGathering}
+                  alt="소셜 모임 - 연결의 밤"
+                  className="relative w-full aspect-[16/9] object-cover"
+                  style={{ border: "1px solid rgba(201, 169, 110, 0.2)" }}
+                  loading="lazy"
+                />
+              </div>
+            </FadeInSection>
+
+            <FadeInSection delay={0.4}>
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Sparkles size={20} style={{ color: "#C9A96E" }} />
+                  <span className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>
+                    Weekly Special
+                  </span>
+                </div>
+
+                <h3 className="font-serif-kr text-xl md:text-2xl font-light" style={{ color: "#E6EFF7" }}>
+                  주 1회, 타로로 이어지는 만남
+                </h3>
+
+                <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9]"
+                   style={{ color: "#BEAEDB" }}>
+                  혼자만의 시간도 좋지만, 때로는 비슷한 마음을 가진 사람들과의 연결이 필요할 때가 있습니다.
+                  <strong style={{ color: "#C9A96E", fontWeight: 400 }}> 매주 한 번, 소수의 인원이 모여 타로를 매개로 서로의 이야기를 나누는 특별한 밤</strong>을 준비합니다.
+                </p>
+
+                <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9]"
+                   style={{ color: "#BEAEDB" }}>
+                  강제적인 네트워킹이 아닌, 카드가 이끄는 자연스러운 대화.
+                  이 공간에서만 가능한, 깊고 따뜻한 연결을 경험해 보세요.
+                </p>
+
+                <div
+                  className="p-5 mt-4"
+                  style={{
+                    backgroundColor: "rgba(58, 45, 52, 0.6)",
+                    border: "1px solid rgba(201, 169, 110, 0.2)",
+                  }}
+                >
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <p className="font-display text-2xl font-light" style={{ color: "#C9A96E" }}>4~6</p>
+                      <p className="font-sans-kr text-xs mt-1" style={{ color: "#BEAEDB" }}>명 소규모</p>
+                    </div>
+                    <div>
+                      <p className="font-display text-2xl font-light" style={{ color: "#C9A96E" }}>120</p>
+                      <p className="font-sans-kr text-xs mt-1" style={{ color: "#BEAEDB" }}>분 세션</p>
+                    </div>
+                    <div>
+                      <p className="font-display text-2xl font-light" style={{ color: "#C9A96E" }}>1x</p>
+                      <p className="font-sans-kr text-xs mt-1" style={{ color: "#BEAEDB" }}>주 1회</p>
+                    </div>
+                  </div>
+                </div>
+
+                <a
+                  href="https://tally.so"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300 hover:scale-105 mt-2"
+                  style={{
+                    border: "1px solid #C9A96E",
+                    color: "#C9A96E",
+                    backgroundColor: "rgba(201, 169, 110, 0.08)",
+                  }}
+                >
+                  <Sparkles size={14} />
+                  참여 신청하기
+                </a>
+              </div>
+            </FadeInSection>
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          10. FOOD — 나눔 쇼케이스 (부가 매력)
       ═══════════════════════════════════════════ */}
       <section id="food" className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#2D2128" }}>
         <TarotParticles />
@@ -710,241 +1189,7 @@ export default function Home() {
       <GoldDivider />
 
       {/* ═══════════════════════════════════════════
-          RULES — 매장 규칙
-      ═══════════════════════════════════════════ */}
-      <section id="rules" className="relative py-24 md:py-32" style={{ backgroundColor: "#3A2D34" }}>
-        <div className="container">
-          <FadeInSection>
-            <SectionTitle
-              sub="Our Promise"
-              main="세 가지 약속"
-              desc="모두의 안전하고 편안한 시간을 위한 규칙입니다."
-            />
-          </FadeInSection>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              {
-                icon: <Users size={28} />,
-                title: "1인 전용",
-                desc: "오직 혼자 오시는 분만 입장 가능합니다. 동행 없이, 온전히 나만의 시간을 보내세요.",
-              },
-              {
-                icon: <ShieldCheck size={28} />,
-                title: "비밀 보장",
-                desc: "이 공간에서 나눈 모든 이야기는 철저히 비밀이 보장됩니다. 안심하고 마음을 열어주세요.",
-              },
-              {
-                icon: <Clock size={28} />,
-                title: "100% 예약제",
-                desc: "모든 세션은 사전 예약으로만 운영됩니다. 대기자 신청 후 순서대로 안내해 드립니다.",
-              },
-            ].map((rule, i) => (
-              <FadeInSection key={rule.title} delay={0.15 * i}>
-                <div
-                  className="relative p-8 text-center h-full transition-all duration-500 hover:translate-y-[-4px]"
-                  style={{
-                    backgroundColor: "rgba(63, 42, 82, 0.4)",
-                    border: "1px solid rgba(201, 169, 110, 0.15)",
-                  }}
-                >
-                  <div className="inline-flex items-center justify-center w-14 h-14 mb-5"
-                       style={{ color: "#C9A96E", border: "1px solid rgba(201, 169, 110, 0.3)" }}>
-                    {rule.icon}
-                  </div>
-                  <h3 className="font-serif-kr text-lg mb-3" style={{ color: "#E6EFF7" }}>
-                    {rule.title}
-                  </h3>
-                  <p className="font-sans-kr text-sm font-light leading-relaxed" style={{ color: "#BEAEDB" }}>
-                    {rule.desc}
-                  </p>
-                </div>
-              </FadeInSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* ═══════════════════════════════════════════
-          GALLERY — 공간 갤러리
-      ═══════════════════════════════════════════ */}
-      <section id="gallery" className="relative py-24 md:py-32" style={{ backgroundColor: "#3F2A52" }}>
-        <div className="container">
-          <FadeInSection>
-            <SectionTitle
-              sub="The Space"
-              main="비밀의 공간"
-            />
-          </FadeInSection>
-
-          {/* Masonry-like gallery */}
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-              {[
-                { src: ASSETS.chairPurple, span: "row-span-2", aspect: "aspect-[3/5]" },
-                { src: ASSETS.galleryWall, span: "", aspect: "aspect-square" },
-                { src: ASSETS.purpleSalon, span: "", aspect: "aspect-square" },
-                { src: ASSETS.sofaPurple, span: "md:col-span-2", aspect: "aspect-[16/9]" },
-                { src: ASSETS.flowersSofa, span: "", aspect: "aspect-[3/4]" },
-                { src: ASSETS.chairPink, span: "", aspect: "aspect-[3/4]" },
-                { src: ASSETS.tarotWheel, span: "", aspect: "aspect-square" },
-              ].map((img, i) => (
-                <FadeInSection key={i} delay={0.1 * i} className={img.span}>
-                  <div
-                    className={`relative overflow-hidden group ${img.aspect}`}
-                    style={{ border: "1px solid rgba(201, 169, 110, 0.1)" }}
-                  >
-                    <img
-                      src={img.src}
-                      alt="Solo Salon 공간"
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ backgroundColor: "rgba(63, 42, 82, 0.3)" }}
-                    />
-                  </div>
-                </FadeInSection>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* ═══════════════════════════════════════════
-          ABOUT — 공감 섹션 (여성 이미지)
-      ═══════════════════════════════════════════ */}
-      <section id="about" className="relative py-24 md:py-32" style={{ backgroundColor: "#3A2D34" }}>
-        <div className="container">
-          <FadeInSection>
-            <SectionTitle
-              sub="Why Solo Salon"
-              main="혼자라서 더 깊은 대화"
-              desc="때로는 혼자일 때, 가장 솔직한 이야기가 시작됩니다."
-            />
-          </FadeInSection>
-
-          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center max-w-5xl mx-auto">
-            <FadeInSection delay={0.2}>
-              <div className="relative">
-                <div className="absolute -inset-4 opacity-20 blur-2xl" style={{ backgroundColor: "#3F2A52" }} />
-                <img
-                  src={ASSETS.femaleAbout}
-                  alt="타로를 보며 혼술하는 모습"
-                  className="relative w-full aspect-[3/4] object-cover"
-                  style={{ border: "1px solid rgba(201, 169, 110, 0.2)" }}
-                  loading="lazy"
-                />
-              </div>
-            </FadeInSection>
-
-            <FadeInSection delay={0.4}>
-              <div className="space-y-6">
-                <blockquote
-                  className="font-serif-kr text-lg md:text-xl font-light leading-relaxed pl-6"
-                  style={{
-                    color: "#E6EFF7",
-                    borderLeft: "2px solid #C9A96E",
-                  }}
-                >
-                  "오늘 하루, 아무에게도 말 못 한 이야기가 있으신가요?"
-                </blockquote>
-
-                <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9]"
-                   style={{ color: "#BEAEDB" }}>
-                  친구에게도, 가족에게도 쉽게 꺼내지 못하는 마음이 있습니다.
-                  술 한 잔의 용기가 필요한 밤, 낯선 공간에서 낯선 사람과 나누는
-                  대화는 때로 가장 진솔한 위로가 됩니다.
-                </p>
-
-                <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9]"
-                   style={{ color: "#BEAEDB" }}>
-                  Haemilsia Solo Salon은 <strong style={{ color: "#C9A96E", fontWeight: 400 }}>혼자 오는 사람만을 위한 프라이빗 공간</strong>입니다.
-                  타로 리딩과 함께하는 90분의 세션 동안,
-                  바텐더이자 상담사인 호스트가 당신의 이야기에 귀 기울입니다.
-                </p>
-
-                <div className="flex items-center gap-4 pt-4">
-                  <div className="w-12 h-px" style={{ backgroundColor: "#C9A96E" }} />
-                  <span className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>
-                    100% Reservation Only
-                  </span>
-                </div>
-              </div>
-            </FadeInSection>
-          </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* ═══════════════════════════════════════════
-          HOST — 한 잔의 술, 한 장의 카드 (남성 배너)
-      ═══════════════════════════════════════════ */}
-      <section className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#2D2128" }}>
-        <div className="absolute inset-0">
-          <img
-            src={ASSETS.maleHostBanner}
-            alt="타로 상담사"
-            className="w-full h-full object-cover object-top"
-            loading="lazy"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(to right, rgba(45,33,40,0.85) 0%, rgba(45,33,40,0.5) 50%, rgba(45,33,40,0.85) 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(to bottom, rgba(45,33,40,0.3) 0%, rgba(45,33,40,0.7) 100%)",
-            }}
-          />
-        </div>
-
-        <div className="relative z-10 container">
-          <FadeInSection>
-            <div className="max-w-2xl">
-              <p className="font-display text-sm tracking-[0.3em] uppercase mb-4" style={{ color: "#C9A96E" }}>
-                Private Tarot Session
-              </p>
-              <h2 className="font-serif-kr text-2xl md:text-4xl font-light leading-snug mb-6" style={{ color: "#E6EFF7" }}>
-                한 잔의 술, 한 장의 카드,
-                <br />
-                그리고 당신의 이야기
-              </h2>
-              <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9] mb-8" style={{ color: "#BEAEDB" }}>
-                호스트는 바텐더이자 타로 리더입니다.
-                당신의 이야기에 귀 기울이고, 카드가 전하는 메시지를 함께 읽어드립니다.
-                판단 없이, 조언 없이, 오직 경청과 공감으로 채워지는 시간.
-              </p>
-              <a
-                href="https://tally.so"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-8 py-3.5 font-display text-sm tracking-[0.2em] uppercase transition-all duration-300 hover:scale-105"
-                style={{
-                  backgroundColor: "#C9A96E",
-                  color: "#3A2D34",
-                }}
-              >
-                예약 대기 신청
-              </a>
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* ═══════════════════════════════════════════
-          RECRUIT — 구인 광고
+          11. RECRUIT — 구인 광고
       ═══════════════════════════════════════════ */}
       <section id="recruit" className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#3A2D34" }}>
         <TarotParticles />
@@ -1008,252 +1253,7 @@ export default function Home() {
       <GoldDivider />
 
       {/* ═══════════════════════════════════════════
-          COMMUNITY — 소셜 모임 확장
-      ═══════════════════════════════════════════ */}
-      <section id="community" className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#3F2A52" }}>
-        <div className="absolute inset-0 opacity-20">
-          <img src={ASSETS.rulesBg} alt="" className="w-full h-full object-cover" loading="lazy" />
-        </div>
-        <div className="relative z-10 container">
-          <FadeInSection>
-            <SectionTitle
-              sub="Connection Night"
-              main="연결의 밤"
-              desc="혼자이되, 외롭지 않은 시간"
-            />
-          </FadeInSection>
-
-          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center max-w-5xl mx-auto">
-            <FadeInSection delay={0.2}>
-              <div className="relative">
-                <div
-                  className="absolute -inset-4 opacity-20 blur-3xl"
-                  style={{ backgroundColor: "#C9A96E" }}
-                />
-                <img
-                  src={ASSETS.tarotSocialGathering}
-                  alt="소셜 모임 - 연결의 밤"
-                  className="relative w-full aspect-[16/9] object-cover"
-                  style={{ border: "1px solid rgba(201, 169, 110, 0.2)" }}
-                  loading="lazy"
-                />
-              </div>
-            </FadeInSection>
-
-            <FadeInSection delay={0.4}>
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <Sparkles size={20} style={{ color: "#C9A96E" }} />
-                  <span className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>
-                    Weekly Special
-                  </span>
-                </div>
-
-                <h3 className="font-serif-kr text-xl md:text-2xl font-light" style={{ color: "#E6EFF7" }}>
-                  주 1회, 타로로 이어지는 만남
-                </h3>
-
-                <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9]"
-                   style={{ color: "#BEAEDB" }}>
-                  혼자만의 시간도 좋지만, 때로는 비슷한 마음을 가진 사람들과의 연결이 필요할 때가 있습니다.
-                  <strong style={{ color: "#C9A96E", fontWeight: 400 }}> 매주 한 번, 소수의 인원이 모여 타로를 매개로 서로의 이야기를 나누는 특별한 밤</strong>을 준비합니다.
-                </p>
-
-                <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9]"
-                   style={{ color: "#BEAEDB" }}>
-                  강제적인 네트워킹이 아닌, 카드가 이끄는 자연스러운 대화.
-                  이 공간에서만 가능한, 깊고 따뜻한 연결을 경험해 보세요.
-                </p>
-
-                <div
-                  className="p-5 mt-4"
-                  style={{
-                    backgroundColor: "rgba(58, 45, 52, 0.6)",
-                    border: "1px solid rgba(201, 169, 110, 0.2)",
-                  }}
-                >
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <p className="font-display text-2xl font-light" style={{ color: "#C9A96E" }}>4~6</p>
-                      <p className="font-sans-kr text-xs mt-1" style={{ color: "#BEAEDB" }}>명 소규모</p>
-                    </div>
-                    <div>
-                      <p className="font-display text-2xl font-light" style={{ color: "#C9A96E" }}>120</p>
-                      <p className="font-sans-kr text-xs mt-1" style={{ color: "#BEAEDB" }}>분 세션</p>
-                    </div>
-                    <div>
-                      <p className="font-display text-2xl font-light" style={{ color: "#C9A96E" }}>1x</p>
-                      <p className="font-sans-kr text-xs mt-1" style={{ color: "#BEAEDB" }}>주 1회</p>
-                    </div>
-                  </div>
-                </div>
-
-                <a
-                  href="https://tally.so"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 font-display text-sm tracking-[0.15em] uppercase transition-all duration-300 hover:scale-105 mt-2"
-                  style={{
-                    border: "1px solid #C9A96E",
-                    color: "#C9A96E",
-                    backgroundColor: "rgba(201, 169, 110, 0.08)",
-                  }}
-                >
-                  <Sparkles size={14} />
-                  참여 신청하기
-                </a>
-              </div>
-            </FadeInSection>
-          </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* ═══════════════════════════════════════════
-          PRICING — 가격 안내
-      ═══════════════════════════════════════════ */}
-      <section className="relative py-24 md:py-32" style={{ backgroundColor: "#3A2D34" }}>
-        <div className="container">
-          <FadeInSection>
-            <SectionTitle
-              sub="Pricing"
-              main="세션 안내"
-            />
-          </FadeInSection>
-
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
-            {/* Private Session */}
-            <FadeInSection delay={0.2}>
-              <div
-                className="p-8 md:p-10 text-center relative overflow-hidden h-full"
-                style={{
-                  backgroundColor: "rgba(63, 42, 82, 0.5)",
-                  border: "1px solid rgba(201, 169, 110, 0.25)",
-                }}
-              >
-                <div className="absolute top-3 left-3 w-6 h-6" style={{ borderTop: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
-                <div className="absolute top-3 right-3 w-6 h-6" style={{ borderTop: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
-                <div className="absolute bottom-3 left-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
-                <div className="absolute bottom-3 right-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
-
-                <p className="font-display text-sm tracking-[0.3em] uppercase mb-4" style={{ color: "#C9A96E" }}>
-                  Private Session
-                </p>
-                <h3 className="font-serif-kr text-xl md:text-2xl font-light mb-2" style={{ color: "#E6EFF7" }}>
-                  1:1 프라이빗 세션
-                </h3>
-                <p className="font-sans-kr text-sm mb-6" style={{ color: "#BEAEDB" }}>
-                  90분 / 웰컴 드링크 + 타로 리딩 + 대화 + 마무리 음료
-                </p>
-
-                <div className="mb-6">
-                  <span className="font-display text-4xl md:text-5xl font-light" style={{ color: "#C9A96E" }}>
-                    50,000
-                  </span>
-                  <span className="font-sans-kr text-sm ml-1" style={{ color: "#BEAEDB" }}>원</span>
-                </div>
-
-                <div className="space-y-2 mb-8 text-left max-w-xs mx-auto">
-                  {[
-                    "시그니처 웰컴 드링크 1잔 포함",
-                    "마무리 음료 1잔 포함",
-                    "1:1 타로 리딩",
-                    "기념 타로 카드 1장 증정",
-                  ].map((item) => (
-                    <div key={item} className="flex items-start gap-3">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#C9A96E" }} />
-                      <span className="font-sans-kr text-sm font-light" style={{ color: "#BEAEDB" }}>{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <a
-                  href="https://tally.so"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block w-full py-3.5 font-display text-sm tracking-[0.2em] uppercase transition-all duration-300 hover:opacity-90"
-                  style={{
-                    backgroundColor: "#C9A96E",
-                    color: "#3A2D34",
-                  }}
-                >
-                  예약 대기 신청하기
-                </a>
-              </div>
-            </FadeInSection>
-
-            {/* Connection Night Session */}
-            <FadeInSection delay={0.35}>
-              <div
-                className="p-8 md:p-10 text-center relative overflow-hidden h-full"
-                style={{
-                  backgroundColor: "rgba(63, 42, 82, 0.5)",
-                  border: "1px solid rgba(201, 169, 110, 0.25)",
-                }}
-              >
-                <div className="absolute top-3 left-3 w-6 h-6" style={{ borderTop: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
-                <div className="absolute top-3 right-3 w-6 h-6" style={{ borderTop: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
-                <div className="absolute bottom-3 left-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
-                <div className="absolute bottom-3 right-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
-
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <Sparkles size={14} style={{ color: "#C9A96E" }} />
-                  <p className="font-display text-sm tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>
-                    Connection Night
-                  </p>
-                </div>
-                <h3 className="font-serif-kr text-xl md:text-2xl font-light mb-2" style={{ color: "#E6EFF7" }}>
-                  연결의 밤 세션
-                </h3>
-                <p className="font-sans-kr text-sm mb-6" style={{ color: "#BEAEDB" }}>
-                  120분 / 그룹 타로 리딩 + 대화 + 음료 2잔
-                </p>
-
-                <div className="mb-6">
-                  <span className="font-display text-4xl md:text-5xl font-light" style={{ color: "#C9A96E" }}>
-                    30,000
-                  </span>
-                  <span className="font-sans-kr text-sm ml-1" style={{ color: "#BEAEDB" }}>원</span>
-                </div>
-
-                <div className="space-y-2 mb-8 text-left max-w-xs mx-auto">
-                  {[
-                    "4~6명 소규모 그룹",
-                    "음료 2잔 포함",
-                    "그룹 타로 리딩 체험",
-                    "주 1회 운영 (사전 신청)",
-                  ].map((item) => (
-                    <div key={item} className="flex items-start gap-3">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "#C9A96E" }} />
-                      <span className="font-sans-kr text-sm font-light" style={{ color: "#BEAEDB" }}>{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <a
-                  href="https://tally.so"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block w-full py-3.5 font-display text-sm tracking-[0.2em] uppercase transition-all duration-300 hover:opacity-90"
-                  style={{
-                    border: "1px solid #C9A96E",
-                    color: "#C9A96E",
-                    backgroundColor: "rgba(201, 169, 110, 0.08)",
-                  }}
-                >
-                  참여 신청하기
-                </a>
-              </div>
-            </FadeInSection>
-          </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* ═══════════════════════════════════════════
-          FAQ — 자주 묻는 질문
+          12. FAQ — 남은 의문 해소
       ═══════════════════════════════════════════ */}
       <section id="faq" className="relative py-24 md:py-32" style={{ backgroundColor: "#3A2D34" }}>
         <TarotParticles />
@@ -1308,7 +1308,7 @@ export default function Home() {
       <GoldDivider />
 
       {/* ═══════════════════════════════════════════
-          CONTACT — 위치 & 연락처
+          13. CONTACT — 행동 유도
       ═══════════════════════════════════════════ */}
       <section id="contact" className="relative py-24 md:py-32" style={{ backgroundColor: "#3F2A52" }}>
         <div className="container">

@@ -8,12 +8,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Moon } from "lucide-react";
 
 const NAV_ITEMS = [
+  { label: "About", href: "#about" },
   { label: "Tarot", href: "#tarot" },
   { label: "Experience", href: "#experience" },
-  { label: "Food", href: "#food" },
   { label: "Gallery", href: "#gallery" },
-  { label: "About", href: "#about" },
+  { label: "Pricing", href: "#pricing" },
   { label: "Community", href: "#community" },
+  { label: "Food", href: "#food" },
   { label: "FAQ", href: "#faq" },
   { label: "Contact", href: "#contact" },
 ];
