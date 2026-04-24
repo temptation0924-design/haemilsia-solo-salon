@@ -745,7 +745,7 @@ export default function Home() {
           <FadeInSection>
             <SectionTitle
               sub="The Space"
-              main="비밀의 공간"
+              main="문을 열면"
             />
           </FadeInSection>
 
