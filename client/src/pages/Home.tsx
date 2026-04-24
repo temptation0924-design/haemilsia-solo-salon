@@ -747,6 +747,9 @@ export default function Home() {
               sub="The Space"
               main="문을 열면"
             />
+            <p className="mt-4 font-body text-lg tracking-wide" style={{ color: '#BEAEDB' }}>
+              캔들과 타로, 그리고 한 잔의 술이 기다리고 있습니다
+            </p>
           </FadeInSection>
 
           {/* Masonry-like gallery */}
