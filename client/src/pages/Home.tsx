@@ -38,6 +38,10 @@ const ASSETS = {
   tarotSoloDrink2: "/manus-storage/tarot-solo-drink-2_81ac5f34.png",
   tarotSocialGathering: "/manus-storage/tarot-social-gathering_db70132d.png",
   tarotCardsCloseup: "/manus-storage/tarot-cards-closeup_6988dcc9.png",
+  /* Session Phase Images */
+  sessionWelcome: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/session-welcome-DKLdikibznq4gqyu7TSjYQ.webp",
+  sessionDeepTalk: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/session-deeptalk-AVbMmYanCv9tD23PLiFq93.webp",
+  sessionReflection: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/session-reflection-ER3NojdyVhUQa4UQwXpuNw.webp",
   /* Food Showcase */
   foodShowcase: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/food-showcase-QCk8E8Av49ChJuJ2VDjxax.png",
   foodSharing: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/food-sharing-concept-QEJchY3PyvHWCJKJHLuVTp.webp",
@@ -478,7 +482,7 @@ export default function Home() {
                 titleKr: "환영의 시간",
                 duration: "20분",
                 desc: "시그니처 웰컴 드링크와 함께 긴장을 풀어드립니다. 간단한 타로 카드 선택으로 오늘 밤의 테마를 정합니다.",
-                image: ASSETS.tarotCards,
+                image: ASSETS.sessionWelcome,
               },
               {
                 phase: "02",
@@ -486,7 +490,7 @@ export default function Home() {
                 titleKr: "깊은 대화",
                 duration: "50분",
                 desc: "타로 리딩을 매개로 자연스럽게 대화가 시작됩니다. 호스트가 당신의 이야기에 진심으로 귀 기울이며, 함께 의미를 찾아갑니다.",
-                image: ASSETS.constellation,
+                image: ASSETS.sessionDeepTalk,
               },
               {
                 phase: "03",
@@ -494,7 +498,7 @@ export default function Home() {
                 titleKr: "성찰의 시간",
                 duration: "20분",
                 desc: "마무리 음료와 함께 오늘의 대화를 되짚어봅니다. 작은 타로 카드 한 장을 기념으로 가져가실 수 있습니다.",
-                image: ASSETS.purpleGoldSofa,
+                image: ASSETS.sessionReflection,
               },
             ].map((item, i) => (
               <FadeInSection key={item.phase} delay={0.2 + i * 0.15}>
