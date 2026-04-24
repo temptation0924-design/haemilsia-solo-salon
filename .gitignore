@@ -121,3 +121,6 @@ client/public/__manus__/version.json
 __pycache__/
 *.pyc
 *.tmp
+
+# Local Netlify folder
+.netlify
