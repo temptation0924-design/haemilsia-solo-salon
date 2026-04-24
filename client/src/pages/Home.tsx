@@ -31,8 +31,8 @@ const ASSETS = {
   tarotCards: "/manus-storage/tarot-cards_f00a0030.jpeg",
   purpleSalon: "/manus-storage/purple-salon_3185f3a6.jpeg",
   /* AI-generated images */
-  maleHostBanner: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/male-tarot-host-banner-v3-P6sFdZsi9XPUDFM2PJuQiX.webp",
-  maleHostAbout: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/male-tarot-host-about-v3-9aqds977avJFbPxuUeTjxZ.webp",
+  maleHostBanner: "/manus-storage/male-tarot-host-banner-v2_05cc3608.png",
+  maleHostAbout: "/manus-storage/male-tarot-host-about-v2_1fcd5c56.png",
   femaleAbout: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/female-tarot-about-GHRqXMDhfW2t8Ki2YEepzx.webp",
   tarotSoloDrink1: "/manus-storage/tarot-solo-drink-1_792c15e9.png",
   tarotSoloDrink2: "/manus-storage/tarot-solo-drink-2_81ac5f34.png",
