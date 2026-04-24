@@ -608,7 +608,7 @@ export default function Home() {
                 title: "Welcome",
                 titleKr: "환영의 시간",
                 duration: "20분",
-                desc: "시그니처 웰컴 드링크와 함께 긴장을 풀어드립니다. 간단한 타로 카드 선택으로 오늘 밤의 테마를 정합니다.",
+                desc: "시그니처 웰컴 한 잔과 함께 긴장을 풀어드립니다. 위스키, 와인, 소주, 맥주 중 원하시는 잔술을 고르고, 타로 카드 선택으로 오늘 밤의 테마를 정합니다.",
                 image: ASSETS.sessionWelcome,
               },
               {
@@ -624,7 +624,7 @@ export default function Home() {
                 title: "Reflection",
                 titleKr: "성찰의 시간",
                 duration: "20분",
-                desc: "마무리 음료와 함께 오늘의 대화를 되짚어봅니다. 작은 타로 카드 한 장을 기념으로 가져가실 수 있습니다.",
+                desc: "마무리 한 잔과 함께 오늘의 대화를 되짚어봅니다. 작은 타로 카드 한 장을 기념으로 가져가실 수 있습니다.",
                 image: ASSETS.sessionReflection,
               },
             ].map((item, i) => (
@@ -826,7 +826,7 @@ export default function Home() {
                   1:1 프라이빗 세션
                 </h3>
                 <p className="font-sans-kr text-sm mb-6" style={{ color: "#BEAEDB" }}>
-                  90분 / 웰컴 드링크 + 타로 리딩 + 대화 + 마무리 음료
+                  90분 / 웰컴 한 잔 + 타로 리딩 + 대화 + 마무리 한 잔
                 </p>
 
                 <div className="mb-6">
@@ -843,8 +843,8 @@ export default function Home() {
 
                 <div className="space-y-2 mb-8 text-left max-w-xs mx-auto">
                   {[
-                    "시그니처 웰컴 드링크 1잔 포함",
-                    "마무리 음료 1잔 포함",
+                    "웰컴 잔술 1잔 포함 (위스키·와인·소주·맥주)",
+                    "마무리 잔술 1잔 포함",
                     "1:1 타로 리딩",
                     "기념 타로 카드 1장 증정",
                   ].map((item) => (
@@ -897,7 +897,7 @@ export default function Home() {
                   연결의 밤 세션
                 </h3>
                 <p className="font-sans-kr text-sm mb-6" style={{ color: "#BEAEDB" }}>
-                  120분 / 그룹 타로 리딩 + 대화 + 음료 2잔
+                  120분 / 그룹 타로 리딩 + 대화 + 잔술 2잔
                 </p>
 
                 <div className="mb-6">
@@ -915,7 +915,7 @@ export default function Home() {
                 <div className="space-y-2 mb-8 text-left max-w-xs mx-auto">
                   {[
                     "4~6명 소규모 그룹",
-                    "음료 2잔 포함",
+                    "잔술 2잔 포함 (위스키·와인·소주·맥주)",
                     "그룹 타로 리딩 체험",
                     "주 1회 운영 (사전 신청)",
                   ].map((item) => (
@@ -1289,7 +1289,7 @@ export default function Home() {
             {[
               {
                 q: "술을 못 마셔도 방문할 수 있나요?",
-                a: "물론입니다. 논알콜 시그니처 음료를 준비하고 있으며, 음료 선택은 세션 시작 시 상담사와 함께 정하실 수 있습니다. 대화와 타로 리딩이 중심이므로 음주 여부는 전혀 상관없습니다.",
+                a: "물론입니다. 논알콜 잔술(무알콜 칵테일 등)도 준비하고 있으며, 세션 시작 시 상담사와 함께 선택하실 수 있습니다. 대화와 타로 리딩이 중심이므로 음주 여부는 전혀 상관없습니다.",
               },
               {
                 q: "타로를 처음 접하는데 괜찮을까요?",
