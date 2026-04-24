@@ -8,7 +8,7 @@
  * Hero → About(여성) → Tarot → Host(남성배너) → Experience → Rules → Gallery → Pricing → Community → Food → Recruit → FAQ → Contact → Footer
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Moon, Clock, Users, ShieldCheck, MapPin, Phone, Instagram, MessageCircle, Sparkles, Star, UtensilsCrossed, Gift, Truck } from "lucide-react";
 import MobileMenu from "@/components/MobileMenu";
@@ -134,6 +134,286 @@ function TarotParticles() {
   );
 }
 
+/* ─── Mouse-reactive Gold Particles ─── */
+function MouseGoldParticles() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particles = useRef<Array<{ x: number; y: number; vx: number; vy: number; life: number; size: number; opacity: number }>>([]);
+  const mouse = useRef({ x: 0, y: 0 });
+  const animRef = useRef<number>(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const handleMove = (e: MouseEvent) => {
+      mouse.current = { x: e.clientX, y: e.clientY };
+      for (let i = 0; i < 2; i++) {
+        particles.current.push({
+          x: e.clientX + (Math.random() - 0.5) * 10,
+          y: e.clientY + (Math.random() - 0.5) * 10,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5 - 0.5,
+          life: 1,
+          size: Math.random() * 3 + 1,
+          opacity: Math.random() * 0.5 + 0.5,
+        });
+      }
+    };
+    window.addEventListener("mousemove", handleMove);
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.current = particles.current.filter((p) => p.life > 0);
+      particles.current.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.015;
+        p.opacity = p.life * 0.6;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 169, 110, ${p.opacity})`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 169, 110, ${p.opacity * 0.15})`;
+        ctx.fill();
+      });
+      animRef.current = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", handleMove);
+      cancelAnimationFrame(animRef.current);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 z-[9999] pointer-events-none hidden md:block"
+      style={{ mixBlendMode: "screen" }}
+    />
+  );
+}
+
+/* ─── Tarot Card Draw Mini-Game ─── */
+const TAROT_CARDS = [
+  { name: "The Fool", nameKr: "바보", meaning: "새로운 시작, 순수한 모험의 에너지가 당신을 기다립니다.", emoji: "0" },
+  { name: "The Magician", nameKr: "마법사", meaning: "당신 안에 이미 모든 도구가 있습니다. 의지를 행동으로 옮기세요.", emoji: "I" },
+  { name: "The High Priestess", nameKr: "여사제", meaning: "직감을 믿으세요. 보이지 않는 곳에 답이 있습니다.", emoji: "II" },
+  { name: "The Empress", nameKr: "여황제", meaning: "풍요와 사랑의 에너지가 당신을 감싸고 있습니다.", emoji: "III" },
+  { name: "The Emperor", nameKr: "황제", meaning: "안정과 질서의 힘으로 목표를 이루어 나갈 때입니다.", emoji: "IV" },
+  { name: "The Lovers", nameKr: "연인", meaning: "진정한 선택의 순간. 마음이 이끄는 방향을 따르세요.", emoji: "VI" },
+  { name: "The Chariot", nameKr: "전차", meaning: "강한 의지와 결단력으로 승리를 향해 나아가세요.", emoji: "VII" },
+  { name: "Strength", nameKr: "힘", meaning: "부드러운 용기가 당신의 가장 큰 무기입니다.", emoji: "VIII" },
+  { name: "The Hermit", nameKr: "은둔자", meaning: "혼자만의 시간이 가장 깊은 지혜를 선물합니다.", emoji: "IX" },
+  { name: "Wheel of Fortune", nameKr: "운명의 수레바퀴", meaning: "변화의 바람이 불고 있습니다. 흐름에 몸을 맡기세요.", emoji: "X" },
+  { name: "The Star", nameKr: "별", meaning: "희망의 빛이 당신을 비추고 있습니다. 꿈을 놓지 마세요.", emoji: "XVII" },
+  { name: "The Moon", nameKr: "달", meaning: "무의식의 세계가 열리고 있습니다. 두려움 너머의 진실을 보세요.", emoji: "XVIII" },
+  { name: "The Sun", nameKr: "태양", meaning: "밝은 에너지와 기쁨이 가득한 시간이 다가옵니다.", emoji: "XIX" },
+  { name: "The World", nameKr: "세계", meaning: "하나의 여정이 완성됩니다. 새로운 장이 시작될 준비를 하세요.", emoji: "XXI" },
+];
+
+function TarotCardDraw() {
+  const [drawn, setDrawn] = useState(false);
+  const [flipping, setFlipping] = useState(false);
+  const [card, setCard] = useState(TAROT_CARDS[0]);
+  const [hovering, setHovering] = useState(false);
+
+  const drawCard = useCallback(() => {
+    if (flipping) return;
+    setFlipping(true);
+    setDrawn(false);
+    const randomCard = TAROT_CARDS[Math.floor(Math.random() * TAROT_CARDS.length)];
+    setCard(randomCard);
+    setTimeout(() => {
+      setDrawn(true);
+      setFlipping(false);
+    }, 800);
+  }, [flipping]);
+
+  return (
+    <div className="text-center">
+      <div
+        className="relative mx-auto cursor-pointer"
+        style={{ width: 220, height: 340, perspective: 1000 }}
+        onClick={drawCard}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+      >
+        <motion.div
+          className="relative w-full h-full"
+          style={{ transformStyle: "preserve-3d" }}
+          animate={{
+            rotateY: drawn ? 180 : 0,
+            scale: hovering && !drawn ? 1.05 : 1,
+          }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+        >
+          {/* Card Back */}
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center"
+            style={{
+              backfaceVisibility: "hidden",
+              background: "linear-gradient(135deg, #3F2A52 0%, #2D2128 50%, #3F2A52 100%)",
+              border: "2px solid #C9A96E",
+              boxShadow: hovering ? "0 0 30px rgba(201,169,110,0.4)" : "0 0 15px rgba(201,169,110,0.15)",
+            }}
+          >
+            <div className="w-[180px] h-[300px] flex flex-col items-center justify-center"
+                 style={{ border: "1px solid rgba(201,169,110,0.3)" }}>
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              >
+                <Star size={40} style={{ color: "#C9A96E" }} />
+              </motion.div>
+              <p className="font-display text-xs tracking-[0.3em] mt-4 uppercase" style={{ color: "#C9A96E" }}>
+                Draw a Card
+              </p>
+            </div>
+          </div>
+
+          {/* Card Front */}
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center p-6"
+            style={{
+              backfaceVisibility: "hidden",
+              transform: "rotateY(180deg)",
+              background: "linear-gradient(135deg, #2D2128 0%, #3F2A52 50%, #2D2128 100%)",
+              border: "2px solid #C9A96E",
+              boxShadow: "0 0 30px rgba(201,169,110,0.3)",
+            }}
+          >
+            <p className="font-display text-3xl mb-1" style={{ color: "#C9A96E" }}>{card.emoji}</p>
+            <p className="font-display text-sm tracking-widest uppercase mb-1" style={{ color: "#E6EFF7" }}>
+              {card.name}
+            </p>
+            <p className="font-serif-kr text-base mb-4" style={{ color: "#C9A96E" }}>
+              {card.nameKr}
+            </p>
+            <div className="w-12 h-px mb-4" style={{ backgroundColor: "rgba(201,169,110,0.4)" }} />
+            <p className="font-sans-kr text-xs font-light leading-relaxed" style={{ color: "#BEAEDB" }}>
+              {card.meaning}
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
+      {drawn && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-6 space-y-3"
+        >
+          <button
+            onClick={drawCard}
+            className="font-display text-xs tracking-widest uppercase px-6 py-2 transition-all duration-300 hover:scale-105"
+            style={{ border: "1px solid rgba(201,169,110,0.4)", color: "#C9A96E", backgroundColor: "transparent" }}
+          >
+            Draw Again
+          </button>
+          <p className="font-sans-kr text-xs font-light" style={{ color: "rgba(190,174,219,0.6)" }}>
+            더 깊은 이야기가 궁금하다면
+          </p>
+          <a
+            href="https://tally.so"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block font-display text-xs tracking-widest uppercase px-8 py-3 transition-all duration-300 hover:scale-105"
+            style={{ backgroundColor: "#C9A96E", color: "#3A2D34" }}
+          >
+            세션 예약하기
+          </a>
+        </motion.div>
+      )}
+
+      {!drawn && !flipping && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-6 font-sans-kr text-xs font-light"
+          style={{ color: "rgba(190,174,219,0.5)" }}
+        >
+          카드를 클릭하여 오늘의 메시지를 확인하세요
+        </motion.p>
+      )}
+    </div>
+  );
+}
+
+/* ─── Countdown Timer ─── */
+function CountdownTimer({ targetDate }: { targetDate: Date }) {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const calc = () => {
+      const now = new Date().getTime();
+      const diff = targetDate.getTime() - now;
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000),
+      });
+    };
+    calc();
+    const timer = setInterval(calc, 1000);
+    return () => clearInterval(timer);
+  }, [targetDate]);
+
+  const units = [
+    { label: "DAYS", value: timeLeft.days },
+    { label: "HRS", value: timeLeft.hours },
+    { label: "MIN", value: timeLeft.minutes },
+    { label: "SEC", value: timeLeft.seconds },
+  ];
+
+  return (
+    <div className="flex items-center justify-center gap-3 md:gap-4">
+      {units.map((u, i) => (
+        <div key={u.label} className="flex items-center gap-3 md:gap-4">
+          <div className="text-center">
+            <div
+              className="font-display text-2xl md:text-4xl tracking-wider w-14 md:w-20 py-2 md:py-3"
+              style={{
+                color: "#C9A96E",
+                backgroundColor: "rgba(63, 42, 82, 0.6)",
+                border: "1px solid rgba(201, 169, 110, 0.2)",
+              }}
+            >
+              {String(u.value).padStart(2, "0")}
+            </div>
+            <p className="font-display text-[9px] md:text-[10px] tracking-[0.2em] mt-1" style={{ color: "rgba(190,174,219,0.5)" }}>
+              {u.label}
+            </p>
+          </div>
+          {i < units.length - 1 && (
+            <span className="font-display text-lg md:text-2xl" style={{ color: "rgba(201,169,110,0.4)" }}>:</span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ─── FAQ Accordion Item ─── */
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
@@ -209,6 +489,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#3A2D34" }}>
+      <MouseGoldParticles />
 
       {/* ═══════════════════════════════════════════
           NAVIGATION
@@ -509,6 +790,21 @@ export default function Home() {
               </div>
             </div>
           </FadeInSection>
+
+          {/* Tarot Card Draw Mini-Game */}
+          <FadeInSection delay={0.4}>
+            <div className="mt-16 md:mt-20">
+              <div className="text-center mb-8">
+                <p className="font-display text-sm tracking-[0.3em] uppercase mb-2" style={{ color: "#C9A96E" }}>
+                  Today's Card
+                </p>
+                <h3 className="font-serif-kr text-xl md:text-2xl font-light" style={{ color: "#E6EFF7" }}>
+                  오늘의 카드를 뽑아보세요
+                </h3>
+              </div>
+              <TarotCardDraw />
+            </div>
+          </FadeInSection>
         </div>
       </section>
 
@@ -799,6 +1095,21 @@ export default function Home() {
               sub="Pricing"
               main="세션 안내"
             />
+          </FadeInSection>
+
+          {/* Countdown Timer */}
+          <FadeInSection delay={0.15}>
+            <div className="text-center mb-12">
+              <div className="inline-block px-5 py-2 mb-6" style={{ backgroundColor: 'rgba(201,169,110,0.15)', border: '1px solid rgba(201,169,110,0.3)' }}>
+                <p className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: '#C9A96E' }}>
+                  Grand Open Event
+                </p>
+              </div>
+              <CountdownTimer targetDate={new Date('2026-07-31T23:59:59')} />
+              <p className="font-sans-kr text-xs font-light mt-4" style={{ color: 'rgba(190,174,219,0.6)' }}>
+                오픈 이벤트 종료까지 남은 시간
+              </p>
+            </div>
           </FadeInSection>
 
           <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
