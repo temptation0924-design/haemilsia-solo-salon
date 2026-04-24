@@ -28,6 +28,8 @@ const ASSETS = {
   tarotCards: "/manus-storage/tarot-cards_f00a0030.jpeg",
   purpleSalon: "/manus-storage/purple-salon_3185f3a6.jpeg",
   /* New AI-generated images */
+  maleHostBanner: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/male-tarot-host-banner-v3-P6sFdZsi9XPUDFM2PJuQiX.webp",
+  maleHostAbout: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/male-tarot-host-about-v3-9aqds977avJFbPxuUeTjxZ.webp",
   tarotSoloDrink1: "/manus-storage/tarot-solo-drink-1_792c15e9.png",
   tarotSoloDrink2: "/manus-storage/tarot-solo-drink-2_81ac5f34.png",
   tarotSocialGathering: "/manus-storage/tarot-social-gathering_db70132d.png",
@@ -315,8 +317,8 @@ export default function Home() {
               <div className="relative">
                 <div className="absolute -inset-4 opacity-20 blur-2xl" style={{ backgroundColor: "#3F2A52" }} />
                 <img
-                  src={ASSETS.tarotSoloDrink2}
-                  alt="타로를 보며 혼술하는 모습"
+                  src={ASSETS.maleHostAbout}
+                  alt="타로 상담사"
                   className="relative w-full aspect-[3/4] object-cover"
                   style={{ border: "1px solid rgba(201, 169, 110, 0.2)" }}
                   loading="lazy"
@@ -446,8 +448,8 @@ export default function Home() {
               />
               <div className="relative overflow-hidden" style={{ border: "1px solid rgba(201, 169, 110, 0.15)" }}>
                 <img
-                  src={ASSETS.tarotSoloDrink1}
-                  alt="타로를 보며 혼술하는 모습"
+                  src={ASSETS.maleHostBanner}
+                  alt="타로 상담사 - 한 잔의 술, 한 장의 카드"
                   className="w-full aspect-[3/2] object-cover"
                   loading="lazy"
                 />
@@ -634,6 +636,70 @@ export default function Home() {
               </FadeInSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          RECRUIT — 구인 광고
+      ═══════════════════════════════════════════ */}
+      <section id="recruit" className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#2D2128" }}>
+        <TarotParticles />
+        <div className="relative z-10 container">
+          <FadeInSection>
+            <div className="max-w-3xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 mb-6 px-5 py-2" style={{ border: "1px solid rgba(201, 169, 110, 0.3)", backgroundColor: "rgba(201, 169, 110, 0.06)" }}>
+                <Sparkles size={14} style={{ color: "#C9A96E" }} />
+                <span className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>Now Hiring</span>
+              </div>
+
+              <h2 className="font-serif-kr text-2xl md:text-4xl font-light mb-4" style={{ color: "#E6EFF7" }}>
+                타로를 배우며 함께 일할 분을 찾습니다
+              </h2>
+
+              <p className="font-sans-kr text-sm md:text-base font-light leading-[1.9] mb-8" style={{ color: "#BEAEDB" }}>
+                Haemilsia Solo Salon은 단순한 술집이 아닌, 사람의 마음에 귀 기울이는 공간입니다.<br />
+                타로에 관심이 있고, 사람과의 대화를 좋아하시는 분이라면 경험이 없어도 괜찮습니다.<br />
+                저희가 타로 리딩을 처음부터 교육해 드립니다.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 max-w-2xl mx-auto">
+                {[
+                  { icon: <Star size={22} />, title: "타로 교육 제공", desc: "전문 타로 리딩 교육을 무료로 받으실 수 있습니다" },
+                  { icon: <MessageCircle size={22} />, title: "대화를 좋아하는 분", desc: "경청과 공감 능력이 있는 분을 환영합니다" },
+                  { icon: <Moon size={22} />, title: "유연한 근무", desc: "수~일 저녁 시간대, 협의 가능" },
+                ].map((item) => (
+                  <div
+                    key={item.title}
+                    className="p-5 text-center transition-all duration-500 hover:translate-y-[-4px]"
+                    style={{ backgroundColor: "rgba(63, 42, 82, 0.4)", border: "1px solid rgba(201, 169, 110, 0.15)" }}
+                  >
+                    <div className="inline-flex items-center justify-center w-11 h-11 mb-3" style={{ color: "#C9A96E", border: "1px solid rgba(201, 169, 110, 0.3)" }}>
+                      {item.icon}
+                    </div>
+                    <h4 className="font-serif-kr text-sm mb-1.5" style={{ color: "#E6EFF7" }}>{item.title}</h4>
+                    <p className="font-sans-kr text-xs font-light leading-relaxed" style={{ color: "#BEAEDB" }}>{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href="https://tally.so"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-8 py-3.5 font-display text-sm tracking-[0.2em] uppercase transition-all duration-300 hover:scale-105"
+                style={{ border: "1px solid #C9A96E", color: "#C9A96E", backgroundColor: "rgba(201, 169, 110, 0.08)" }}
+              >
+                <Moon size={14} />
+                지원하기
+              </a>
+
+              <p className="font-sans-kr text-xs font-light mt-6" style={{ color: "rgba(190,174,219,0.5)" }}>
+                DM 또는 지원 폼을 통해 편하게 문의해 주세요
+              </p>
+            </div>
+          </FadeInSection>
         </div>
       </section>
 
