@@ -816,6 +816,9 @@ export default function Home() {
                 <div className="absolute bottom-3 left-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
                 <div className="absolute bottom-3 right-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
 
+                <div className="inline-block px-3 py-1 mb-3 font-sans-kr text-xs tracking-wider" style={{ backgroundColor: '#C9A96E', color: '#3A2D34', fontWeight: 600 }}>
+                  OPEN EVENT 50% OFF
+                </div>
                 <p className="font-display text-sm tracking-[0.3em] uppercase mb-4" style={{ color: "#C9A96E" }}>
                   Private Session
                 </p>
@@ -827,6 +830,11 @@ export default function Home() {
                 </p>
 
                 <div className="mb-6">
+                  <div className="mb-1">
+                    <span className="font-display text-lg font-light line-through opacity-50" style={{ color: "#BEAEDB" }}>
+                      100,000원
+                    </span>
+                  </div>
                   <span className="font-display text-4xl md:text-5xl font-light" style={{ color: "#C9A96E" }}>
                     50,000
                   </span>
@@ -876,6 +884,9 @@ export default function Home() {
                 <div className="absolute bottom-3 left-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderLeft: "1px solid #C9A96E" }} />
                 <div className="absolute bottom-3 right-3 w-6 h-6" style={{ borderBottom: "1px solid #C9A96E", borderRight: "1px solid #C9A96E" }} />
 
+                <div className="inline-block px-3 py-1 mb-3 font-sans-kr text-xs tracking-wider" style={{ backgroundColor: '#C9A96E', color: '#3A2D34', fontWeight: 600 }}>
+                  OPEN EVENT 50% OFF
+                </div>
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <Sparkles size={14} style={{ color: "#C9A96E" }} />
                   <p className="font-display text-sm tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>
@@ -890,6 +901,11 @@ export default function Home() {
                 </p>
 
                 <div className="mb-6">
+                  <div className="mb-1">
+                    <span className="font-display text-lg font-light line-through opacity-50" style={{ color: "#BEAEDB" }}>
+                      60,000원
+                    </span>
+                  </div>
                   <span className="font-display text-4xl md:text-5xl font-light" style={{ color: "#C9A96E" }}>
                     30,000
                   </span>
