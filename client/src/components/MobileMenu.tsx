@@ -9,8 +9,9 @@ import { Menu, X, Moon } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "About", href: "#about" },
+  { label: "Tarot", href: "#tarot" },
   { label: "Experience", href: "#experience" },
-  { label: "Rules", href: "#rules" },
+  { label: "Community", href: "#community" },
   { label: "Gallery", href: "#gallery" },
   { label: "Contact", href: "#contact" },
 ];
