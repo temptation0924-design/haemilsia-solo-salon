@@ -1729,7 +1729,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════
           FOOTER
       ═══════════════════════════════════════════ */}
-      <footer className="py-12 md:py-16" style={{ backgroundColor: "#2D2128", borderTop: "1px solid rgba(201, 169, 110, 0.1)" }}>
+      <footer className="py-12 pb-28 md:py-16 md:pb-16" style={{ backgroundColor: "#2D2128", borderTop: "1px solid rgba(201, 169, 110, 0.1)" }}>
         <div className="container text-center">
           <div className="flex justify-center mb-6">
             <img src={ASSETS.divider} alt="" className="w-48 opacity-40" loading="lazy" />

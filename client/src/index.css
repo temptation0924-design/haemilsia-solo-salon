@@ -136,6 +136,9 @@
     @apply bg-background text-foreground;
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 300;
+    /* 한글 본문: 어절 단위 줄바꿈 (단어 중간 잘림 방지) */
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
