@@ -4,13 +4,13 @@
  * Colors: Jacarta #3F2A52, Dark Blue-Gray #75619D, Wisteria #BEAEDB,
  *         Bright Gray #E6EFF7, Black Coffee #3A2D34, Gold #C9A96E
  *
- * Section Order (V4):
- * Hero → Tarot → Experience → Rules → Gallery → About(여성) → Host(남성배너) → Recruit → Community → Pricing → Contact → Footer
+ * Section Order (V5):
+ * Hero → Tarot → Experience → Food → Rules → Gallery → About(여성) → Host(남성배너) → Recruit → Community → Pricing → FAQ → Contact → Footer
  */
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { Moon, Clock, Users, ShieldCheck, MapPin, Phone, Instagram, MessageCircle, Sparkles, Star } from "lucide-react";
+import { Moon, Clock, Users, ShieldCheck, MapPin, Phone, Instagram, MessageCircle, Sparkles, Star, UtensilsCrossed, Gift, Truck } from "lucide-react";
 import MobileMenu from "@/components/MobileMenu";
 
 /* ─── Asset URLs ─── */
@@ -38,6 +38,9 @@ const ASSETS = {
   tarotSoloDrink2: "/manus-storage/tarot-solo-drink-2_81ac5f34.png",
   tarotSocialGathering: "/manus-storage/tarot-social-gathering_db70132d.png",
   tarotCardsCloseup: "/manus-storage/tarot-cards-closeup_6988dcc9.png",
+  /* Food Showcase */
+  foodShowcase: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/food-showcase-QCk8E8Av49ChJuJ2VDjxax.png",
+  foodSharing: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/food-sharing-concept-QEJchY3PyvHWCJKJHLuVTp.webp",
 };
 
 /* ─── Reusable Components ─── */
@@ -229,6 +232,7 @@ export default function Home() {
             {[
               { label: "Tarot", href: "#tarot" },
               { label: "Experience", href: "#experience" },
+              { label: "Food", href: "#food" },
               { label: "Gallery", href: "#gallery" },
               { label: "About", href: "#about" },
               { label: "Community", href: "#community" },
@@ -539,6 +543,163 @@ export default function Home() {
               </FadeInSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ═══════════════════════════════════════════
+          FOOD — 음식 나눔 쇼케이스
+      ═══════════════════════════════════════════ */}
+      <section id="food" className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#2D2128" }}>
+        <TarotParticles />
+        <div className="container relative z-10">
+          <FadeInSection>
+            <SectionTitle
+              sub="Sharing Table"
+              main="나눔 쇼케이스"
+              desc="혼자여도 다양한 맛을 경험할 수 있는 특별한 시스템"
+            />
+          </FadeInSection>
+
+          {/* Hero Image — 쇼케이스 */}
+          <FadeInSection delay={0.2}>
+            <div className="max-w-5xl mx-auto mb-16 relative">
+              <div
+                className="overflow-hidden"
+                style={{ border: "1px solid rgba(201, 169, 110, 0.3)" }}
+              >
+                <img
+                  src={ASSETS.foodShowcase}
+                  alt="나눔 쇼케이스"
+                  className="w-full h-64 md:h-96 object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-6 py-2" style={{ backgroundColor: "#2D2128", border: "1px solid rgba(201, 169, 110, 0.4)" }}>
+                <p className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: "#C9A96E" }}>Today's Showcase</p>
+              </div>
+            </div>
+          </FadeInSection>
+
+          {/* 설명 텍스트 */}
+          <FadeInSection delay={0.3}>
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <p className="font-serif-kr text-lg md:text-xl leading-relaxed mb-4" style={{ color: "#E6EFF7" }}>
+                "혼자라서 한 가지만 시켜야 할까?"<br />
+                그런 걱정은 여기서 내려놓으세요.
+              </p>
+              <p className="font-sans-kr text-sm md:text-base leading-relaxed" style={{ color: "#BEAEDB" }}>
+                Haemilsia Solo Salon에서는 손님들이 자신의 음식을 <strong style={{ color: "#C9A96E" }}>먹기 전에 한 접시 덜어</strong> 쇼케이스에 나눕니다.<br />
+                다음 손님은 쇼케이스에 놓인 다양한 음식을 자유롭게 맛볼 수 있어요.<br />
+                혼자여도 여러 가지 맛을 경험하는, 조용한 나눔의 문화입니다.
+              </p>
+            </div>
+          </FadeInSection>
+
+          {/* 3단계 플로우 */}
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-16">
+            {[
+              {
+                icon: Truck,
+                step: "01",
+                title: "자유롭게 주문",
+                desc: "배달 앱으로 원하는 음식을 주문하거나, 직접 가져오셔도 됩니다. 치킨, 초밥, 피자 — 무엇이든 좋아요.",
+              },
+              {
+                icon: Gift,
+                step: "02",
+                title: "한 접시 나눔",
+                desc: "음식이 도착하면 먹기 전에 한 접시를 덜어 쇼케이스에 올려주세요. 먹던 것이 아닌, 깨끗하게 덜어낸 한 접시입니다.",
+              },
+              {
+                icon: UtensilsCrossed,
+                step: "03",
+                title: "다양한 맛 경험",
+                desc: "쇼케이스에 놓인 이전 손님들의 나눔 음식을 자유롭게 맛보세요. 혼자여도 여러 가지 안주를 즐길 수 있습니다.",
+              },
+            ].map((item, i) => (
+              <FadeInSection key={item.step} delay={0.2 + i * 0.15}>
+                <div
+                  className="p-8 text-center relative group h-full"
+                  style={{
+                    backgroundColor: "rgba(63, 42, 82, 0.4)",
+                    border: "1px solid rgba(201, 169, 110, 0.15)",
+                    transition: "all 0.4s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(201, 169, 110, 0.4)";
+                    e.currentTarget.style.backgroundColor = "rgba(63, 42, 82, 0.6)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(201, 169, 110, 0.15)";
+                    e.currentTarget.style.backgroundColor = "rgba(63, 42, 82, 0.4)";
+                  }}
+                >
+                  <div className="w-14 h-14 mx-auto mb-5 flex items-center justify-center" style={{ border: "1px solid rgba(201, 169, 110, 0.3)", borderRadius: "50%" }}>
+                    <item.icon size={24} style={{ color: "#C9A96E" }} />
+                  </div>
+                  <p className="font-display text-xs tracking-[0.3em] uppercase mb-2" style={{ color: "#C9A96E" }}>
+                    Step {item.step}
+                  </p>
+                  <h3 className="font-serif-kr text-lg mb-3" style={{ color: "#E6EFF7" }}>
+                    {item.title}
+                  </h3>
+                  <p className="font-sans-kr text-sm leading-relaxed" style={{ color: "#BEAEDB" }}>
+                    {item.desc}
+                  </p>
+                </div>
+              </FadeInSection>
+            ))}
+          </div>
+
+          {/* 바 카운터 이미지 + 부가 설명 */}
+          <FadeInSection delay={0.4}>
+            <div className="max-w-5xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div
+                  className="overflow-hidden"
+                  style={{ border: "1px solid rgba(201, 169, 110, 0.2)" }}
+                >
+                  <img
+                    src={ASSETS.foodSharing}
+                    alt="음식 나눔 컨셉"
+                    className="w-full h-64 md:h-80 object-cover hover:scale-105 transition-transform duration-700"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-1" style={{ border: "1px solid rgba(201, 169, 110, 0.3)", borderRadius: "50%" }}>
+                      <span className="font-display text-xs" style={{ color: "#C9A96E" }}>Q</span>
+                    </div>
+                    <div>
+                      <p className="font-serif-kr text-base mb-1" style={{ color: "#E6EFF7" }}>배달 음식도 되나요?</p>
+                      <p className="font-sans-kr text-sm" style={{ color: "#BEAEDB" }}>네! 배달 앱으로 자유롭게 주문하시거나, 직접 음식을 가져오셔도 됩니다.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-1" style={{ border: "1px solid rgba(201, 169, 110, 0.3)", borderRadius: "50%" }}>
+                      <span className="font-display text-xs" style={{ color: "#C9A96E" }}>Q</span>
+                    </div>
+                    <div>
+                      <p className="font-serif-kr text-base mb-1" style={{ color: "#E6EFF7" }}>먹던 음식을 나누는 건가요?</p>
+                      <p className="font-sans-kr text-sm" style={{ color: "#BEAEDB" }}>아닙니다. 음식이 도착하면 <strong style={{ color: "#C9A96E" }}>먹기 전에</strong> 깨끗하게 덜어서 쇼케이스에 올려놓는 방식입니다.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-1" style={{ border: "1px solid rgba(201, 169, 110, 0.3)", borderRadius: "50%" }}>
+                      <span className="font-display text-xs" style={{ color: "#C9A96E" }}>Q</span>
+                    </div>
+                    <div>
+                      <p className="font-serif-kr text-base mb-1" style={{ color: "#E6EFF7" }}>꼭 나눠야 하나요?</p>
+                      <p className="font-sans-kr text-sm" style={{ color: "#BEAEDB" }}>의무는 아니지만, 나눔에 참여하시면 다른 손님의 음식도 맛보실 수 있어요. 작은 나눔이 모여 풍성한 한 상이 됩니다.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeInSection>
         </div>
       </section>
 

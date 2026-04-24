@@ -10,6 +10,7 @@ import { Menu, X, Moon } from "lucide-react";
 const NAV_ITEMS = [
   { label: "Tarot", href: "#tarot" },
   { label: "Experience", href: "#experience" },
+  { label: "Food", href: "#food" },
   { label: "Gallery", href: "#gallery" },
   { label: "About", href: "#about" },
   { label: "Community", href: "#community" },
