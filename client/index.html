@@ -1,12 +1,78 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Haemilsia Solo Salon — 혼자 오는 사람만 받는 작은 술집</title>    
+
+    <!-- Primary SEO Meta Tags -->
+    <title>Haemilsia Solo Salon | 혼자 오는 사람만 받는 작은 술집</title>
+    <meta name="title" content="Haemilsia Solo Salon | 혼자 오는 사람만 받는 작은 술집" />
+    <meta name="description" content="경기도 화성 동탄에서 2026년 7월 오픈하는 프라이빗 솔로 살롱. 잔술(위스키·와인·소주·맥주)과 타로 체험이 함께하는 1인 전용 공간. 깊이 있는 대화와 혼자만의 시간을 위한 작은 술집." />
+    <meta name="keywords" content="해밀시아, 솔로살롱, 혼자가는술집, 프라이빗바, 동탄술집, 화성술집, 잔술, 타로카드, 프라이빗세션, 타로체험, 연결의밤, 위스키바, 와인바, 1인술집" />
+    <meta name="author" content="Haemilsia Solo Salon" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook / KakaoTalk -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Haemilsia Solo Salon | 혼자 오는 사람만 받는 작은 술집" />
+    <meta property="og:description" content="잔술과 타로가 있는 1인 전용 프라이빗 살롱. 2026년 7월 동탄 오픈. 오픈 이벤트 50% 할인 진행 중." />
+    <meta property="og:url" content="https://haemilsia-solo-salon.netlify.app/" />
+    <meta property="og:image" content="https://haemilsia-solo-salon.netlify.app/images/hero-banner.webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="Haemilsia Solo Salon" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Haemilsia Solo Salon | 혼자 오는 사람만 받는 작은 술집" />
+    <meta name="twitter:description" content="잔술과 타로가 있는 1인 전용 프라이빗 살롱. 2026년 7월 동탄 오픈." />
+    <meta name="twitter:image" content="https://haemilsia-solo-salon.netlify.app/images/hero-banner.webp" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://haemilsia-solo-salon.netlify.app/" />
+
+    <!-- Theme Color (Jacarta 메인 컬러) -->
+    <meta name="theme-color" content="#3F2A52" />
+    <meta name="msapplication-TileColor" content="#3F2A52" />
+
+    <!-- Favicon (inline SVG — Jacarta 배경 + Gold 초승달) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%233F2A52'/%3E%3Cpath d='M 42 16 A 18 18 0 1 0 42 48 A 14 14 0 1 1 42 16 Z' fill='%23C9A96E'/%3E%3C/svg%3E" />
+
+    <!-- Apple Touch Icon (iOS 홈화면) -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Solo Salon" />
+
+    <!-- Structured Data (JSON-LD) for Google Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BarOrPub",
+      "name": "해밀시아 솔로 살롱",
+      "alternateName": "Haemilsia Solo Salon",
+      "description": "혼자 오는 사람만 받는 프라이빗 1인 살롱. 잔술과 타로 체험이 함께하는 깊이 있는 대화의 공간.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "화성시 동탄",
+        "addressRegion": "경기도",
+        "addressCountry": "KR"
+      },
+      "servesCuisine": ["위스키", "와인", "소주", "맥주", "잔술"],
+      "priceRange": "₩₩",
+      "url": "https://haemilsia-solo-salon.netlify.app/",
+      "image": "https://haemilsia-solo-salon.netlify.app/images/hero-banner.webp",
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "description": "2026년 7월 31일 오픈 예정"
+      }
+    }
+    </script>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans+KR:wght@300;400;500&family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -15,10 +81,9 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
+    <!-- Analytics (umami) — 환경변수 설정 시에만 로드
+    <script defer src="%VITE_ANALYTICS_ENDPOINT%/umami" data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
+    -->
   </body>
 
 </html>

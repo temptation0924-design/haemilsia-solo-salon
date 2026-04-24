@@ -13,38 +13,38 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Moon, Clock, Users, ShieldCheck, MapPin, Phone, Instagram, MessageCircle, Sparkles, Star, UtensilsCrossed, Gift, Truck } from "lucide-react";
 import MobileMenu from "@/components/MobileMenu";
 
-/* ─── Asset URLs ─── */
+/* ─── Asset URLs (local /images/*.webp — migrated 2026-04-24) ─── */
 const ASSETS = {
-  heroBanner: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/hero-banner-UYtwdmckUER4LsgPyFwWcS.png",
-  sessionFlow: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/session-flow-eZFE7aWHc8FZzAMZEVFpFd.webp",
-  divider: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/divider-ornament-mpVWPJiYTShQ7mHD5z8jiL.png",
-  rulesBg: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/rules-bg-RyvraoUxWA5ZjUwM2EBahC.webp",
-  heroMoon: "/manus-storage/hero-moon_594932ac.jpeg",
-  chairPurple: "/manus-storage/chair-purple_11139c89.jpeg",
-  galleryWall: "/manus-storage/gallery-wall_324da00f.jpeg",
-  constellation: "/manus-storage/constellation_003b70e4.jpeg",
-  sofaPurple: "/manus-storage/sofa-purple_9d60bb55.jpeg",
-  chairPink: "/manus-storage/chair-pink_a25e0231.jpeg",
-  flowersSofa: "/manus-storage/flowers-sofa_f7a0941d.jpeg",
-  purpleGoldSofa: "/manus-storage/purple-gold-sofa_99c9246b.jpeg",
-  tarotWheel: "/manus-storage/tarot-wheel_dfc44dce.jpeg",
-  tarotCards: "/manus-storage/tarot-cards_f00a0030.jpeg",
-  purpleSalon: "/manus-storage/purple-salon_3185f3a6.jpeg",
+  heroBanner: "/images/hero-banner.webp",
+  sessionFlow: "/images/session-flow.webp",
+  divider: "/images/divider-ornament.webp",
+  rulesBg: "/images/rules-bg.webp",
+  heroMoon: "/images/hero-moon_594932ac.webp",
+  chairPurple: "/images/chair-purple_11139c89.webp",
+  galleryWall: "/images/gallery-wall_324da00f.webp",
+  constellation: "/images/constellation_003b70e4.webp",
+  sofaPurple: "/images/sofa-purple_9d60bb55.webp",
+  chairPink: "/images/chair-pink_a25e0231.webp",
+  flowersSofa: "/images/flowers-sofa_f7a0941d.webp",
+  purpleGoldSofa: "/images/purple-gold-sofa_99c9246b.webp",
+  tarotWheel: "/images/tarot-wheel_dfc44dce.webp",
+  tarotCards: "/images/tarot-cards_f00a0030.webp",
+  purpleSalon: "/images/purple-salon_3185f3a6.webp",
   /* AI-generated images */
-  maleHostBanner: "/manus-storage/male-tarot-host-banner-v2_05cc3608.png",
-  maleHostAbout: "/manus-storage/male-tarot-host-about-v2_1fcd5c56.png",
-  femaleAbout: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/female-tarot-about-GHRqXMDhfW2t8Ki2YEepzx.webp",
-  tarotSoloDrink1: "/manus-storage/tarot-solo-drink-1_792c15e9.png",
-  tarotSoloDrink2: "/manus-storage/tarot-solo-drink-2_81ac5f34.png",
-  tarotSocialGathering: "/manus-storage/tarot-social-gathering_db70132d.png",
-  tarotCardsCloseup: "/manus-storage/tarot-cards-closeup_6988dcc9.png",
+  maleHostBanner: "/images/male-tarot-host-banner-v2_05cc3608.webp",
+  maleHostAbout: "/images/male-tarot-host-about-v2_1fcd5c56.webp",
+  femaleAbout: "/images/female-tarot-about.webp",
+  tarotSoloDrink1: "/images/tarot-solo-drink-1_792c15e9.webp",
+  tarotSoloDrink2: "/images/tarot-solo-drink-2_81ac5f34.webp",
+  tarotSocialGathering: "/images/tarot-social-gathering_db70132d.webp",
+  tarotCardsCloseup: "/images/tarot-cards-closeup_6988dcc9.webp",
   /* Session Phase Images */
-  sessionWelcome: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/session-welcome-DKLdikibznq4gqyu7TSjYQ.webp",
-  sessionDeepTalk: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/session-deeptalk-AVbMmYanCv9tD23PLiFq93.webp",
-  sessionReflection: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/session-reflection-ER3NojdyVhUQa4UQwXpuNw.webp",
+  sessionWelcome: "/images/session-welcome.webp",
+  sessionDeepTalk: "/images/session-deeptalk.webp",
+  sessionReflection: "/images/session-reflection.webp",
   /* Food Showcase */
-  foodShowcase: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/food-showcase-QCk8E8Av49ChJuJ2VDjxax.png",
-  foodSharing: "https://d2xsxph8kpxj0f.cloudfront.net/310519663221473285/SPB73dFU3nqewnEHXzCYYq/food-sharing-concept-QEJchY3PyvHWCJKJHLuVTp.webp",
+  foodShowcase: "/images/food-showcase.webp",
+  foodSharing: "/images/food-sharing-concept.webp",
 };
 
 /* ─── Reusable Components ─── */

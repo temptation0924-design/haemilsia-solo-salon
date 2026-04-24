@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://haemilsia-solo-salon.netlify.app/sitemap.xml
