@@ -1743,6 +1743,15 @@ export default function Home() {
           <p className="font-sans-kr text-xs" style={{ color: "rgba(190,174,219,0.3)" }}>
             &copy; {new Date().getFullYear()} Haemilsia Solo Salon. All rights reserved.
           </p>
+          {/* 비공개 스터디 입구 — 아는 사람만 누르는 글리프 */}
+          <a
+            href="/study/"
+            aria-label="study"
+            className="inline-block mt-5 text-sm no-underline transition-opacity duration-300 opacity-20 hover:opacity-70"
+            style={{ color: "#C9A96E" }}
+          >
+            ✦
+          </a>
         </div>
       </footer>
 
