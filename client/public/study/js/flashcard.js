@@ -65,6 +65,7 @@ TarotApp.modules.flashcard = (function (app) {
       statTri: $("statTri"),
       statX: $("statX"),
       statRounds: $("statRounds"),
+      statRoundsLabel: $("statRoundsLabel"),
       statFlips: $("statFlips"),
       statLastStudy: $("statLastStudy")
     };
@@ -234,7 +235,12 @@ TarotApp.modules.flashcard = (function (app) {
     el.statO.textContent = counts.o;
     el.statTri.textContent = counts.tri;
     el.statX.textContent = counts.x;
-    el.statRounds.textContent = roundBucket().rounds;
+    var bucket = roundBucket();
+    el.statRounds.textContent = bucket.rounds;
+    // 회독 = 덱 전체(필터·슈트 무관)를 한 바퀴. 진행률을 병기해 "필터만 돌면 왜 안 오르지?" 혼란 방지
+    el.statRoundsLabel.textContent = bucket.roundSeen.length > 0
+      ? "오늘 회독 · " + bucket.roundSeen.length + "/" + deckTotal()
+      : "오늘 회독";
     el.statFlips.textContent = app.daily.flips;
     el.statLastStudy.textContent = app.daily.lastStudy || "—";
   }

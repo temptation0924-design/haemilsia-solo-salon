@@ -44,7 +44,10 @@ window.TarotApp = (function () {
   /* deckRounds는 중첩 객체라 공유 참조 오염 방지를 위해 defaults에 넣지 않고 매번 생성 */
   var DAILY_DEFAULTS = { flips: 0, analysisSteps: 0, studiedCards: [], weekLog: {} };
   function freshDeckRounds() {
-    return { major: { rounds: 0, roundSeen: [] }, minor: { rounds: 0, roundSeen: [] } };
+    return {
+      major: { rounds: 0, roundSeen: [], steps: 0 },
+      minor: { rounds: 0, roundSeen: [], steps: 0 }
+    };
   }
 
   var app = {
@@ -126,6 +129,8 @@ window.TarotApp = (function () {
     // flashcard 탭은 내부 state.index로 이동하며 탭을 벗어날 때만 settings.currentCardId를
     // 동기화하므로(onLeave), 덱 전환이 같은 탭 안에서 일어나면 값이 낡아 있을 수 있다 —
     // 활성 모듈에 getCurrentCardId가 있으면 그걸로 최신값을 직접 물어본다.
+    // (getCurrentCardId는 flashcard만 노출. analysis/practice는 카드 이동 즉시
+    //  settings.currentCardId에 저장하므로 폴백값이 곧 최신값이라 노출이 불필요)
     var activeMod = app.modules[app.activeTab];
     var liveCardId = (activeMod && activeMod.getCurrentCardId) ? activeMod.getCurrentCardId() : null;
     app.settings.deckMemory[app.settings.deck] = (liveCardId !== null && liveCardId !== undefined)
@@ -209,14 +214,17 @@ window.TarotApp = (function () {
       var raw = d;
       d = Object.assign({}, DAILY_DEFAULTS, raw);
       d.weekLog = pruneWeekLog(d.weekLog);
-      // 레거시 마이그레이션: 구버전의 rounds/roundSeen(단일 덱)을 메이저 버킷으로 이관
+      // 레거시 마이그레이션: 구버전의 rounds/roundSeen/analysisSteps(단일 덱)를 메이저 버킷으로 이관
       if (!raw.deckRounds) {
         d.deckRounds = freshDeckRounds();
         d.deckRounds.major.rounds = raw.rounds || 0;
         d.deckRounds.major.roundSeen = raw.roundSeen || [];
+        d.deckRounds.major.steps = raw.analysisSteps || 0;
       } else {
-        if (!d.deckRounds.major) d.deckRounds.major = { rounds: 0, roundSeen: [] };
-        if (!d.deckRounds.minor) d.deckRounds.minor = { rounds: 0, roundSeen: [] };
+        ["major", "minor"].forEach(function (dk) {
+          if (!d.deckRounds[dk]) d.deckRounds[dk] = { rounds: 0, roundSeen: [], steps: 0 };
+          if (typeof d.deckRounds[dk].steps !== "number") d.deckRounds[dk].steps = 0;
+        });
       }
     }
     app.daily = d;
@@ -259,7 +267,9 @@ window.TarotApp = (function () {
     if (SUITS.indexOf(s.minorSuit) !== -1) merged.minorSuit = s.minorSuit;
     if (s.deckMemory) {
       DECKS.forEach(function (dk) {
-        if (typeof s.deckMemory[dk] === "number" && app.cardById(s.deckMemory[dk])) {
+        // 존재 확인 + 덱 소속 확인 — 오염된 기억값(다른 덱 id)이 영속되지 않게 정화
+        var mc = (typeof s.deckMemory[dk] === "number") ? app.cardById(s.deckMemory[dk]) : null;
+        if (mc && ((dk === "minor") === (mc.arcana === "minor"))) {
           merged.deckMemory[dk] = s.deckMemory[dk];
         }
       });

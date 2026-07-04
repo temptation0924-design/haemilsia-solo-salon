@@ -314,7 +314,7 @@
       }
       app.saveChecks();
       if (!wasComplete && app.isStepComplete(cardId, stepIdxOf[key], key)) {
-        app.daily.analysisSteps++;
+        app.daily.deckRounds[app.settings.deck].steps++;
       }
       app.markStudied(cardId);
       renderBadges();
@@ -636,7 +636,8 @@
           if (strip) strip.rebuild();
           endTrainingSilently();
           st.openKey = "summary3sec";
-          render();
+          // 숨겨진 탭에서는 렌더하지 않음 — onEnter가 진입 시 렌더 (이중 DOM/타이머 방지)
+          if (app.activeTab === "analysis") render();
         });
         dom.image.addEventListener("error", function () {
           dom.image.style.display = "none";
@@ -653,7 +654,13 @@
       },
       render: render,
       handleKey: handleKey,
-      openCard: function (id) { changeCard(id); }, // records에서 진입용
+      // records에서 진입용 — 렌더는 하지 않는다: 이어지는 setActiveTab의 onEnter가
+      // 1회만 렌더하므로, 여기서 changeCard(→render)를 부르면 이중 DOM 재구축이 됨
+      openCard: function (id) {
+        endTrainingSilently();
+        setCurrentCard(id);
+        st.openKey = "summary3sec";
+      },
       onEnter: function () { st.openKey = "summary3sec"; endTrainingSilently(); render(); },
       onLeave: function () { endTrainingSilently(); clearCountdown(); }
     };
@@ -710,7 +717,7 @@
       app.practiceData[cardId][stepIdx] = entry;
       app.savePractice();
       if (!wasComplete && app.isStepComplete(cardId, stepIdx, key)) {
-        app.daily.analysisSteps++;
+        app.daily.deckRounds[app.settings.deck].steps++;
         app.saveDaily();
       }
     }
@@ -990,7 +997,9 @@
           clearAdvance();
           timerStop();
           st.pos = 0;
-          render();
+          // 숨겨진 탭에서 render()하면 renderStep이 타이머를 백그라운드 기동시켜
+          // 자동 reveal→markStudied로 통계가 오염됨 (Codex P1) — 활성일 때만 렌더
+          if (app.activeTab === "practice") render();
         });
         dom.prImage.addEventListener("error", function () {
           dom.prImage.style.display = "none";
@@ -1084,9 +1093,13 @@
       dom.recRoundsLabel.textContent = "오늘 회독 (" + deckLabel + ")";
       dom.recWeakTitle.textContent = "약한 카드 · " + deckLabel + " (X · △)";
 
-      dom.recStudied.textContent = app.daily.studiedCards.length;
-      dom.recSteps.textContent = app.daily.analysisSteps;
-      dom.recRounds.textContent = app.daily.deckRounds[app.settings.deck].rounds;
+      // 덱 라벨과 일치하도록 숫자도 전부 활성 덱 스코프 (Codex P2)
+      var deckIdSet = {};
+      app.deckCards().forEach(function (c) { deckIdSet[c.id] = true; });
+      dom.recStudied.textContent = app.daily.studiedCards.filter(function (id) { return deckIdSet[id]; }).length;
+      var bucket = app.daily.deckRounds[app.settings.deck];
+      dom.recSteps.textContent = bucket.steps || 0;
+      dom.recRounds.textContent = bucket.rounds;
       dom.recLast.textContent = app.daily.lastStudy || "—";
 
       // 주간 도트 (월~일)
