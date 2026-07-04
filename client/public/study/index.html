@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#3A2D34" />
   <title>메이저 아르카나 문장력 플래쉬노트</title>
-  <meta name="description" content="이미지로 보고, 문장으로 말하는 타로 훈련 — 메이저 아르카나 22장 플래쉬노트 + 기본분석모드" />
+  <meta name="description" content="이미지로 보고, 문장으로 말하는 타로 훈련 — 메이저 22장 + 마이너 56장 플래쉬노트 + 기본분석모드" />
+  <meta name="robots" content="noindex, nofollow" />
   <!-- 폰트: 오프라인(file://)에서도 시스템 폰트로 자연스럽게 폴백됨 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,6 +31,14 @@
       <button type="button" class="tab-btn" data-tab="practice">분석훈련</button>
       <button type="button" class="tab-btn" data-tab="records">기록</button>
     </nav>
+
+    <!-- 덱 전환 (메이저/마이너 학습 분리) — 마이너 데이터 없으면 core가 숨김 -->
+    <div class="deck-switch-wrap" id="deckSwitchWrap">
+      <div class="segmented" id="deckSwitch" role="group" aria-label="덱 선택">
+        <button type="button" class="seg-btn is-active" data-deck="major">메이저 22</button>
+        <button type="button" class="seg-btn" data-deck="minor">마이너 56</button>
+      </div>
+    </div>
   </header>
 
   <!-- ════════════════════════════════════════════════════════
@@ -55,6 +64,18 @@
           <button type="button" class="chip chip-tri" data-filter="tri">△만</button>
           <button type="button" class="chip chip-x" data-filter="x">X만</button>
           <button type="button" class="chip chip-weak" data-filter="weak">△+X</button>
+        </div>
+      </div>
+
+      <!-- 슈트 필터 (마이너 덱에서만 표시) -->
+      <div class="strip suit-strip" role="group" aria-label="슈트 필터">
+        <span class="strip-label">슈트</span>
+        <div class="chip-row" id="suitButtons">
+          <button type="button" class="chip is-active" data-suit="all">전체</button>
+          <button type="button" class="chip" data-suit="wands">완드</button>
+          <button type="button" class="chip" data-suit="cups">컵</button>
+          <button type="button" class="chip" data-suit="swords">소드</button>
+          <button type="button" class="chip" data-suit="pentacles">펜타클</button>
         </div>
       </div>
     </div>
@@ -324,11 +345,12 @@
        ════════════════════════════════════════════════════════ -->
   <section class="tab-panel" id="tab-records">
     <h2 class="panel-title">학습 기록</h2>
+    <p class="rec-deck-badge" id="recDeckBadge"></p>
 
     <div class="stats-grid rec-grid">
       <div class="stat"><span class="stat-value" id="recStudied">0</span><span class="stat-label">오늘 학습 카드</span></div>
       <div class="stat"><span class="stat-value" id="recSteps">0</span><span class="stat-label">오늘 분석 단계</span></div>
-      <div class="stat"><span class="stat-value" id="recRounds">0</span><span class="stat-label">오늘 회독</span></div>
+      <div class="stat"><span class="stat-value" id="recRounds">0</span><span class="stat-label" id="recRoundsLabel">오늘 회독</span></div>
       <div class="stat"><span class="stat-value rec-last" id="recLast">—</span><span class="stat-label">마지막 학습</span></div>
     </div>
 
@@ -340,7 +362,7 @@
     <div id="recTodayCard"></div>
 
     <div class="rec-weak">
-      <h3 class="panel-title">약한 카드 (X · △)</h3>
+      <h3 class="panel-title" id="recWeakTitle">약한 카드 (X · △)</h3>
       <p class="rec-weak-empty" id="recWeakEmpty">약한 카드가 없습니다 — 빠른회독에서 X/△를 체크하면 여기에 모입니다</p>
       <ul class="weak-list" id="recWeakList"></ul>
     </div>
@@ -369,9 +391,12 @@
     </p>
   </footer>
 
-  <!-- 데이터 → 코어 → 모듈 순서 로드 계약 (file:// 호환, defer 없음) -->
+  <!-- 데이터 → 코어 → 모듈 순서 로드 계약 (file:// 호환, defer 없음)
+       cards-minor/analysis-minor가 없어도 typeof 가드로 메이저만으로 동작 -->
   <script src="./assets/data/cards.js"></script>
+  <script src="./assets/data/cards-minor.js"></script>
   <script src="./assets/data/analysis.js"></script>
+  <script src="./assets/data/analysis-minor.js"></script>
   <script src="./js/core.js"></script>
   <script src="./js/flashcard.js"></script>
   <script src="./js/features.js"></script>

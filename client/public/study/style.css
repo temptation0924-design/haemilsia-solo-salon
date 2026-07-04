@@ -1325,3 +1325,25 @@ button.kw-chip.is-hit {
   .ur-compare { grid-template-columns: 1fr 1fr; }
   .an-image-wrap img { max-height: 44vh; }
 }
+
+/* ─── 덱 전환 (메이저/마이너) ─── */
+.deck-switch-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.deck-switch-wrap[hidden] { display: none; }
+#deckSwitch .seg-btn { font-size: 0.8rem; padding: 7px 18px; }
+
+/* 슈트 필터는 마이너 덱에서만 */
+.suit-strip { display: none; }
+body.deck-minor .suit-strip { display: flex; }
+
+/* 기록 탭: 현재 보는 덱 배지 */
+.rec-deck-badge {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--gold-bright);
+  margin: -4px 0 16px;
+  letter-spacing: 0.04em;
+}

@@ -234,27 +234,34 @@
     return box;
   }
 
-  /* 카드 선택 스트립 (analysis/practice 공용 빌더) */
+  /* 카드 선택 스트립 (analysis/practice 공용 빌더) — 활성 덱 카드만, 덱 전환 시 rebuild */
   function buildCardStrip(prefix, onChange) {
     var prev = document.getElementById(prefix + "PrevCard");
     var next = document.getElementById(prefix + "NextCard");
     var select = document.getElementById(prefix + "CardSelect");
-    app.cards.forEach(function (c) {
-      var opt = document.createElement("option");
-      opt.value = c.id;
-      opt.textContent = c.number + " · " + c.koreanName;
-      select.appendChild(opt);
-    });
+    function rebuild() {
+      select.innerHTML = "";
+      app.deckCards().forEach(function (c) {
+        var opt = document.createElement("option");
+        opt.value = c.id;
+        opt.textContent = c.number + " · " + c.koreanName;
+        select.appendChild(opt);
+      });
+    }
+    rebuild();
     prev.addEventListener("click", function () { onChange(step(-1)); });
     next.addEventListener("click", function () { onChange(step(1)); });
     select.addEventListener("change", function () { onChange(parseInt(select.value, 10)); select.blur(); });
     function step(delta) {
-      var ids = app.cards.map(function (c) { return c.id; });
+      var ids = app.deckCards().map(function (c) { return c.id; });
       var pos = ids.indexOf(app.settings.currentCardId);
       if (pos === -1) pos = 0;
       return ids[(pos + delta + ids.length) % ids.length];
     }
-    return { sync: function (id) { select.value = String(id); } };
+    return {
+      sync: function (id) { select.value = String(id); },
+      rebuild: rebuild
+    };
   }
 
   function setCurrentCard(id) {
@@ -615,7 +622,7 @@
     }
 
     function moveCardBy(delta) {
-      var ids = app.cards.map(function (c) { return c.id; });
+      var ids = app.deckCards().map(function (c) { return c.id; });
       var pos = ids.indexOf(currentCardId());
       if (pos === -1) pos = 0;
       changeCard(ids[(pos + delta + ids.length) % ids.length]);
@@ -625,6 +632,12 @@
       init: function () {
         cacheDom();
         strip = buildCardStrip("an", changeCard);
+        app.onDeckChange(function () {
+          if (strip) strip.rebuild();
+          endTrainingSilently();
+          st.openKey = "summary3sec";
+          render();
+        });
         dom.image.addEventListener("error", function () {
           dom.image.style.display = "none";
           dom.imgFallback.hidden = false;
@@ -932,7 +945,7 @@
     }
 
     function moveCardBy(delta) {
-      var ids = app.cards.map(function (c) { return c.id; });
+      var ids = app.deckCards().map(function (c) { return c.id; });
       var pos = ids.indexOf(currentCardId());
       if (pos === -1) pos = 0;
       changeCard(ids[(pos + delta + ids.length) % ids.length]);
@@ -971,6 +984,14 @@
       init: function () {
         cacheDom();
         strip = buildCardStrip("pr", changeCard);
+        app.onDeckChange(function () {
+          if (strip) strip.rebuild();
+          flushTextSave();
+          clearAdvance();
+          timerStop();
+          st.pos = 0;
+          render();
+        });
         dom.prImage.addEventListener("error", function () {
           dom.prImage.style.display = "none";
           dom.prImgFallback.hidden = false;
@@ -1012,11 +1033,14 @@
     var dom = {};
 
     function cacheDom() {
-      ["recStudied", "recSteps", "recRounds", "recLast", "recWeekDots", "recWeekCount",
-       "recTodayCard", "recWeakList", "recWeakEmpty", "recExportBtn", "recResetBtn"].forEach(function (id) {
+      ["recDeckBadge", "recStudied", "recSteps", "recRounds", "recRoundsLabel", "recLast",
+       "recWeekDots", "recWeekCount", "recTodayCard", "recWeakTitle", "recWeakList", "recWeakEmpty",
+       "recExportBtn", "recResetBtn"].forEach(function (id) {
         dom[id] = document.getElementById(id);
       });
     }
+
+    var DECK_LABEL = { major: "메이저 22장", minor: "마이너 56장" };
 
     function completionFor(cardId) {
       var n = 0;
@@ -1026,10 +1050,11 @@
       return n;
     }
 
-    /** 오늘의 카드 — 결정적 선택 (Codex P2): 후보군 X → △ → 완료율 최저 → 전체 */
+    /** 오늘의 카드 — 결정적 선택 (활성 덱 스코프): 후보군 X → △ → 완료율 최저 → 전체 */
     function todaysCard() {
+      var deck = app.deckCards();
       var xs = [], tris = [];
-      app.cards.forEach(function (c) {
+      deck.forEach(function (c) {
         if (app.progress[c.id] === "x") xs.push(c.id);
         else if (app.progress[c.id] === "tri") tris.push(c.id);
       });
@@ -1038,12 +1063,12 @@
       else if (tris.length) pool = tris;
       else {
         var min = 11, ids = [];
-        app.cards.forEach(function (c) {
+        deck.forEach(function (c) {
           var comp = completionFor(c.id);
           if (comp < min) { min = comp; ids = [c.id]; }
           else if (comp === min) ids.push(c.id);
         });
-        pool = ids.length ? ids : app.cards.map(function (c) { return c.id; });
+        pool = ids.length ? ids : deck.map(function (c) { return c.id; });
       }
       var seed = 0;
       var t = app.todayStr();
@@ -1054,9 +1079,14 @@
     function render() {
       app.ensureDailyFresh();
 
+      var deckLabel = DECK_LABEL[app.settings.deck] || DECK_LABEL.major;
+      dom.recDeckBadge.textContent = "📖 " + deckLabel + " 기록 보는 중";
+      dom.recRoundsLabel.textContent = "오늘 회독 (" + deckLabel + ")";
+      dom.recWeakTitle.textContent = "약한 카드 · " + deckLabel + " (X · △)";
+
       dom.recStudied.textContent = app.daily.studiedCards.length;
       dom.recSteps.textContent = app.daily.analysisSteps;
-      dom.recRounds.textContent = app.daily.rounds;
+      dom.recRounds.textContent = app.daily.deckRounds[app.settings.deck].rounds;
       dom.recLast.textContent = app.daily.lastStudy || "—";
 
       // 주간 도트 (월~일)
@@ -1096,13 +1126,14 @@
         dom.recTodayCard.appendChild(banner);
       }
 
-      // 약한 카드 리스트 (X 먼저, 그다음 △ — 3중 정렬 없음)
+      // 약한 카드 리스트 (활성 덱, X 먼저 그다음 △)
       dom.recWeakList.innerHTML = "";
       var weak = [];
-      app.cards.forEach(function (c) {
+      var deckList = app.deckCards();
+      deckList.forEach(function (c) {
         if (app.progress[c.id] === "x") weak.push({ card: c, check: "x" });
       });
-      app.cards.forEach(function (c) {
+      deckList.forEach(function (c) {
         if (app.progress[c.id] === "tri") weak.push({ card: c, check: "tri" });
       });
       dom.recWeakEmpty.hidden = weak.length > 0;
@@ -1144,6 +1175,7 @@
         dom.recExportBtn.addEventListener("click", app.exportData);
         dom.recResetBtn.addEventListener("click", resetAll);
         app.onRollover(render);
+        app.onDeckChange(render);
       },
       render: render,
       handleKey: function () { /* 기록 탭 단축키 없음 */ },

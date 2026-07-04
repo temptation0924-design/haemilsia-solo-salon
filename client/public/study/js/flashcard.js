@@ -16,13 +16,19 @@ TarotApp.modules.flashcard = (function (app) {
   "use strict";
 
   var CHECKS = { o: "O", tri: "△", x: "X" };
-  var TOTAL = app.cards.length;
 
   var state = {
-    order: app.cards.map(function (c) { return c.id; }),
+    order: [],   // 활성 덱의 카드 순서 (rebuildOrder에서 채움)
     index: 0,
     flipped: false
   };
+
+  function deckTotal() { return app.deckCards().length; }
+  function roundBucket() { return app.daily.deckRounds[app.settings.deck]; }
+
+  function rebuildOrder() {
+    state.order = app.deckCards().map(function (c) { return c.id; });
+  }
 
   /* ── DOM 참조 ── */
   var $ = function (id) { return document.getElementById(id); };
@@ -78,8 +84,14 @@ TarotApp.modules.flashcard = (function (app) {
   }
 
   function filteredIds() {
+    var suit = app.settings.deck === "minor" ? app.settings.minorSuit : "all";
     return state.order.filter(function (id) {
-      return matchesFilter(id, app.settings.filter);
+      if (!matchesFilter(id, app.settings.filter)) return false;
+      if (suit !== "all") {
+        var c = app.cardById(id);
+        if (!c || c.suit !== suit) return false;
+      }
+      return true;
     });
   }
 
@@ -185,19 +197,44 @@ TarotApp.modules.flashcard = (function (app) {
     document.querySelectorAll("#filterButtons .chip").forEach(function (btn) {
       btn.classList.toggle("is-active", btn.dataset.filter === app.settings.filter);
     });
+    document.querySelectorAll("#suitButtons .chip").forEach(function (btn) {
+      btn.classList.toggle("is-active", btn.dataset.suit === app.settings.minorSuit);
+    });
+  }
+
+  function setSuit(suit) {
+    app.settings.minorSuit = suit;
+    state.index = 0;
+    setFlipped(false);
+    resetBackScroll();
+    app.saveSettings();
+    renderFilterButtons();
+    renderCard(true);
+  }
+
+  /** 덱 전환 시: 순서 재구성 + 현재 카드 복원 + 전체 재렌더 */
+  function onDeckChange() {
+    rebuildOrder();
+    state.index = 0;
+    setFlipped(false);
+    resetBackScroll();
+    var ids = filteredIds();
+    var pos = ids.indexOf(app.settings.currentCardId);
+    if (pos !== -1) state.index = pos;
+    renderAll(true);
   }
 
   function renderStats() {
     var counts = { o: 0, tri: 0, x: 0 };
-    Object.keys(app.progress).forEach(function (id) {
-      var c = app.progress[id];
-      if (counts[c] !== undefined) counts[c]++;
+    app.deckCards().forEach(function (c) {
+      var v = app.progress[c.id];
+      if (counts[v] !== undefined) counts[v]++;
     });
-    el.statTotal.textContent = TOTAL;
+    el.statTotal.textContent = deckTotal();
     el.statO.textContent = counts.o;
     el.statTri.textContent = counts.tri;
     el.statX.textContent = counts.x;
-    el.statRounds.textContent = app.daily.rounds;
+    el.statRounds.textContent = roundBucket().rounds;
     el.statFlips.textContent = app.daily.flips;
     el.statLastStudy.textContent = app.daily.lastStudy || "—";
   }
@@ -225,11 +262,12 @@ TarotApp.modules.flashcard = (function (app) {
 
     if (state.flipped) {
       app.daily.flips++;
-      if (app.daily.roundSeen.indexOf(card.id) === -1) {
-        app.daily.roundSeen.push(card.id);
-        if (app.daily.roundSeen.length >= TOTAL) {
-          app.daily.rounds++;
-          app.daily.roundSeen = [];
+      var bucket = roundBucket();
+      if (bucket.roundSeen.indexOf(card.id) === -1) {
+        bucket.roundSeen.push(card.id);
+        if (bucket.roundSeen.length >= deckTotal()) {
+          bucket.rounds++;
+          bucket.roundSeen = [];
         }
       }
       app.markStudied(card.id); // lastStudy·weekLog·studiedCards + saveDaily
@@ -336,6 +374,9 @@ TarotApp.modules.flashcard = (function (app) {
     document.querySelectorAll("#filterButtons .chip").forEach(function (btn) {
       btn.addEventListener("click", function () { setFilter(btn.dataset.filter); });
     });
+    document.querySelectorAll("#suitButtons .chip").forEach(function (btn) {
+      btn.addEventListener("click", function () { setSuit(btn.dataset.suit); });
+    });
     document.querySelectorAll("#tab-flashcard .check-btn").forEach(function (btn) {
       btn.addEventListener("click", function () { setCheck(btn.dataset.check); });
     });
@@ -426,9 +467,11 @@ TarotApp.modules.flashcard = (function (app) {
   return {
     init: function () {
       cacheDom();
+      rebuildOrder();
       bindButtons();
       bindTouch();
       app.onRollover(renderStats);
+      app.onDeckChange(onDeckChange);
       renderAll(false);
     },
     render: function () { renderAll(false); },

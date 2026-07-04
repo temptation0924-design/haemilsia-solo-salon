@@ -28,12 +28,24 @@ window.TarotApp = (function () {
   var MODES   = ["3s", "15s", "60s"];
   var FILTERS = ["all", "o", "tri", "x", "weak"];
   var TABS    = ["flashcard", "analysis", "practice", "records"];
+  var DECKS   = ["major", "minor"];
+  var SUITS   = ["all", "wands", "cups", "swords", "pentacles"];
 
-  var SETTINGS_DEFAULTS = { mode: "3s", filter: "all", activeTab: "flashcard", currentCardId: 0 };
-  var DAILY_DEFAULTS = {
-    flips: 0, rounds: 0, roundSeen: [],
-    analysisSteps: 0, studiedCards: [], weekLog: {}
+  /* 메이저(0~21) + 마이너(22~77, cards-minor.js가 있으면) 통합 목록 */
+  var ALL_CARDS = TAROT_CARDS.concat(
+    typeof TAROT_CARDS_MINOR !== "undefined" ? TAROT_CARDS_MINOR : []
+  );
+
+  var SETTINGS_DEFAULTS = {
+    mode: "3s", filter: "all", activeTab: "flashcard", currentCardId: 0,
+    deck: "major", minorSuit: "all",
+    deckMemory: { major: 0, minor: 22 } // 덱별 마지막 카드 기억
   };
+  /* deckRounds는 중첩 객체라 공유 참조 오염 방지를 위해 defaults에 넣지 않고 매번 생성 */
+  var DAILY_DEFAULTS = { flips: 0, analysisSteps: 0, studiedCards: [], weekLog: {} };
+  function freshDeckRounds() {
+    return { major: { rounds: 0, roundSeen: [] }, minor: { rounds: 0, roundSeen: [] } };
+  }
 
   var app = {
     version: APP_VERSION,
@@ -41,7 +53,9 @@ window.TarotApp = (function () {
     MODES: MODES,
     FILTERS: FILTERS,
     TABS: TABS,
-    cards: TAROT_CARDS,
+    DECKS: DECKS,
+    SUITS: SUITS,
+    cards: ALL_CARDS,
     progress: {},      // { [cardId]: "o"|"tri"|"x" }
     daily: null,       // 일일 통계 (아래 loadDaily)
     settings: null,    // { mode, filter, activeTab, currentCardId }
@@ -71,14 +85,66 @@ window.TarotApp = (function () {
   app.loadJSON = loadJSON;
   app.saveJSON = saveJSON;
 
-  /* 카드 조회 — TAROT_CARDS[id] 직접 인덱싱 금지 (마이너 아르카나 확장 대비) */
+  /* 카드 조회 — 배열 인덱싱 금지, id 맵 경유 */
   var cardMap = null;
   app.cardById = function (id) {
     if (!cardMap) {
       cardMap = {};
-      TAROT_CARDS.forEach(function (c) { cardMap[c.id] = c; });
+      ALL_CARDS.forEach(function (c) { cardMap[c.id] = c; });
     }
     return cardMap[id] || null;
+  };
+
+  /* ══════════ 덱 (메이저/마이너 학습 분리) ══════════ */
+
+  app.hasMinorDeck = function () {
+    return typeof TAROT_CARDS_MINOR !== "undefined" && TAROT_CARDS_MINOR.length > 0;
+  };
+
+  /** 활성 덱의 카드 목록 */
+  app.deckCards = function (deck) {
+    var d = deck || app.settings.deck;
+    return ALL_CARDS.filter(function (c) {
+      return d === "minor" ? c.arcana === "minor" : c.arcana !== "minor";
+    });
+  };
+
+  function cardInDeck(id, deck) {
+    var c = app.cardById(id);
+    if (!c) return false;
+    return deck === "minor" ? c.arcana === "minor" : c.arcana !== "minor";
+  }
+
+  var deckListeners = [];
+  app.onDeckChange = function (fn) { deckListeners.push(fn); };
+
+  app.setDeck = function (deck) {
+    if (DECKS.indexOf(deck) === -1 || deck === app.settings.deck) return;
+    if (deck === "minor" && !app.hasMinorDeck()) return;
+
+    // 떠나는 덱의 현재 카드 기억 → 돌아올 때 복원.
+    // flashcard 탭은 내부 state.index로 이동하며 탭을 벗어날 때만 settings.currentCardId를
+    // 동기화하므로(onLeave), 덱 전환이 같은 탭 안에서 일어나면 값이 낡아 있을 수 있다 —
+    // 활성 모듈에 getCurrentCardId가 있으면 그걸로 최신값을 직접 물어본다.
+    var activeMod = app.modules[app.activeTab];
+    var liveCardId = (activeMod && activeMod.getCurrentCardId) ? activeMod.getCurrentCardId() : null;
+    app.settings.deckMemory[app.settings.deck] = (liveCardId !== null && liveCardId !== undefined)
+      ? liveCardId
+      : app.settings.currentCardId;
+    app.settings.deck = deck;
+    var remembered = app.settings.deckMemory[deck];
+    app.settings.currentCardId = cardInDeck(remembered, deck)
+      ? remembered
+      : app.deckCards(deck)[0].id;
+    app.saveSettings();
+
+    document.body.classList.toggle("deck-minor", deck === "minor");
+    document.querySelectorAll("#deckSwitch .seg-btn").forEach(function (btn) {
+      btn.classList.toggle("is-active", btn.dataset.deck === deck);
+    });
+    deckListeners.forEach(function (fn) {
+      try { fn(); } catch (e) { /* 한 모듈 실패가 전체를 막지 않게 */ }
+    });
   };
 
   /* 분석 데이터 조회 — analysis.js 미로드/카드 결손에도 안전 */
@@ -134,13 +200,24 @@ window.TarotApp = (function () {
     if (!d || d.date !== today) {
       d = Object.assign({}, DAILY_DEFAULTS, {
         date: today,
+        deckRounds: freshDeckRounds(),
         lastStudy: d ? d.lastStudy : null,
         weekLog: pruneWeekLog(d ? d.weekLog : {})
       });
       saveJSON(STORAGE_KEYS.dailyStats, d);
     } else {
-      d = Object.assign({}, DAILY_DEFAULTS, d);
+      var raw = d;
+      d = Object.assign({}, DAILY_DEFAULTS, raw);
       d.weekLog = pruneWeekLog(d.weekLog);
+      // 레거시 마이그레이션: 구버전의 rounds/roundSeen(단일 덱)을 메이저 버킷으로 이관
+      if (!raw.deckRounds) {
+        d.deckRounds = freshDeckRounds();
+        d.deckRounds.major.rounds = raw.rounds || 0;
+        d.deckRounds.major.roundSeen = raw.roundSeen || [];
+      } else {
+        if (!d.deckRounds.major) d.deckRounds.major = { rounds: 0, roundSeen: [] };
+        if (!d.deckRounds.minor) d.deckRounds.minor = { rounds: 0, roundSeen: [] };
+      }
     }
     app.daily = d;
   };
@@ -174,17 +251,32 @@ window.TarotApp = (function () {
   app.loadSettings = function () {
     var s = loadJSON(STORAGE_KEYS.settings, {});
     var merged = Object.assign({}, SETTINGS_DEFAULTS);
+    merged.deckMemory = { major: 0, minor: 22 }; // 중첩 객체는 공유 참조 방지 위해 매번 생성
     if (MODES.indexOf(s.mode) !== -1) merged.mode = s.mode;
     if (FILTERS.indexOf(s.filter) !== -1) merged.filter = s.filter;
     if (TABS.indexOf(s.activeTab) !== -1) merged.activeTab = s.activeTab;
+    if (DECKS.indexOf(s.deck) !== -1) merged.deck = s.deck;
+    if (SUITS.indexOf(s.minorSuit) !== -1) merged.minorSuit = s.minorSuit;
+    if (s.deckMemory) {
+      DECKS.forEach(function (dk) {
+        if (typeof s.deckMemory[dk] === "number" && app.cardById(s.deckMemory[dk])) {
+          merged.deckMemory[dk] = s.deckMemory[dk];
+        }
+      });
+    }
     if (typeof s.currentCardId === "number" && app.cardById(s.currentCardId)) {
       merged.currentCardId = s.currentCardId;
     }
+    // 마이너 데이터가 없는데 마이너 덱이 저장돼 있으면 메이저로 폴백
+    if (merged.deck === "minor" && !app.hasMinorDeck()) merged.deck = "major";
+    // 현재 카드가 활성 덱에 없으면 덱 첫 카드로 보정
+    var inDeck = app.deckCards(merged.deck).some(function (c) { return c.id === merged.currentCardId; });
+    if (!inDeck) merged.currentCardId = app.deckCards(merged.deck)[0].id;
     app.settings = merged;
   };
 
   app.saveSettings = function () {
-    saveJSON(STORAGE_KEYS.settings, Object.assign({}, SETTINGS_DEFAULTS, app.settings));
+    saveJSON(STORAGE_KEYS.settings, app.settings);
   };
 
   /* ══════════ 완료율 (분석 10단계) ══════════ */
@@ -304,6 +396,20 @@ window.TarotApp = (function () {
     document.querySelectorAll("#tabBar .tab-btn").forEach(function (btn) {
       btn.addEventListener("click", function () { app.setActiveTab(btn.dataset.tab); });
     });
+
+    // 덱 스위치 (메이저/마이너) — 마이너 데이터 없으면 숨김
+    var deckWrap = document.getElementById("deckSwitchWrap");
+    if (deckWrap) {
+      if (!app.hasMinorDeck()) {
+        deckWrap.hidden = true;
+      } else {
+        document.querySelectorAll("#deckSwitch .seg-btn").forEach(function (btn) {
+          btn.classList.toggle("is-active", btn.dataset.deck === app.settings.deck);
+          btn.addEventListener("click", function () { app.setDeck(btn.dataset.deck); });
+        });
+      }
+    }
+    document.body.classList.toggle("deck-minor", app.settings.deck === "minor");
 
     bindKeyboard();
 
